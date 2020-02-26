@@ -499,6 +499,7 @@ func (m *manager) syncBatch() {
 
 // syncPod syncs the given status with the API server. The caller must not hold the lock.
 func (m *manager) syncPod(uid types.UID, status versionedPodStatus) {
+	klog.V(2).Infof("Start Status Manager: syncPod in syncbatch. pod UID: %q", uid)
 	if !m.needsUpdate(uid, status) {
 		klog.V(1).Infof("Status for pod %q is up-to-date; skipping", uid)
 		return
@@ -556,6 +557,8 @@ func (m *manager) syncPod(uid types.UID, status versionedPodStatus) {
 		klog.V(3).Infof("Pod %q fully terminated and removed from etcd", format.Pod(pod))
 		m.deletePodStatus(uid)
 	}
+
+	klog.V(2).Infof("End Status Manager: syncPod in syncbatch. pod UID: %q", uid)
 }
 
 // needsUpdate returns whether the status is stale for the given pod UID.
