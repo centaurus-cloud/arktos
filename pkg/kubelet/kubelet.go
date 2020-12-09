@@ -1219,6 +1219,9 @@ type Kubelet struct {
 
 	// Mutex to serialize new pod admission and existing pod resizing
 	podResizeMutex sync.Mutex
+
+	// latestNode is the last node which kubelet updated or created
+	latestNode *v1.Node
 }
 
 // setupDataDirs creates:
