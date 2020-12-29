@@ -2353,7 +2353,16 @@ function kube-up() {
     write-controller-config
     create-autoscaler-config
     if [[ "${KUBERNETES_SCALEOUT_PROXY:-false}" == "true" ]]; then
-      create-proxy-vm
+      if [[ "${PROXY_SERVICE_PER_TP:-false} == "true" ]]; then
+        local_name=${PROXY_NAME}
+        export PROXY_NAME=${PROXY_NAME}-${PROXY_SUFFIX}
+        echo "DBG: before create-proxy-vm: proxy_name ${PROXY_NAME}"
+        create-proxy-vm
+        export PROXY_NAME=${local_name}
+        echo "DBG: after create-proxy-vm: proxy_name ${PROXY_NAME}"
+      else
+        create-proxy-vm
+      fi
     fi
     create-master
     create-nodes-firewall
@@ -2819,6 +2828,14 @@ function update-proxy() {
 
   sed -i -e "s@{{ *${macro_name} *}}@${macro_value}@g" "${PROXY_CONFIG_FILE_TMP}"
 
+  ## replace the default route to TP2
+  ##
+  if [[ "${PROXY_SERVICE_PER_TP:-false} == "true" ]]; then
+    if [[ "${PARTITION_TO_UPDATE:-unknown}" == "tenant_partition_two" ]]; then
+      sed -i -e "s@default_backend tenant_api_one@default_backend tenant_api_two@g" "${PROXY_CONFIG_FILE_TMP}"
+    fi
+  fi
+
   cp -f "${PROXY_CONFIG_FILE_TMP}" "${PROXY_CONFIG_FILE_TMP}.interim"
 
   # proxy config files do not know macros, so we trick it with the current master IP temporarily.
@@ -2973,19 +2990,52 @@ function create-master() {
   create-etcd-apiserver-certs "etcd-${MASTER_NAME}" "${MASTER_NAME}" "" "" "${CREATE_CERT_SERVER_IP}"
 
   if [[ "${KUBERNETES_SCALEOUT_PROXY:-false}" == "true" ]]; then
-    setup-proxy
+    if [[ "${PROXY_SERVICE_PER_TP:-false} == "true" ]]; then
+      local_name=${PROXY_NAME}
+      export PROXY_NAME=${PROXY_NAME}-${PROXY_SUFFIX}
+      setup-proxy
+      export PROXY_NAME=${local_name}
+    else
+      setup-proxy
+    fi
   fi
 
-  if [[ "${PARTITION_TO_UPDATE:-unknown}" == "resource_partition" ]]; then 
-    update-proxy "resource_partition_ip" "${MASTER_RESERVED_IP}"
+  # the RP info will need to be updated to both proxy services
+  #
+  if [[ "${PARTITION_TO_UPDATE:-unknown}" == "resource_partition" ]]; then
+    if [[ "${PROXY_SERVICE_PER_TP:-false} == "true" ]]; then
+      local_name=${PROXY_NAME}
+      export PROXY_NAME=${local_name}-1
+      update-proxy "resource_partition_ip" "${MASTER_RESERVED_IP}"
+      export PROXY_NAME=${local_name}-2
+      update-proxy "resource_partition_ip" "${MASTER_RESERVED_IP}"
+      export PROXY_NAME=${local_name}
+    else
+      update-proxy "resource_partition_ip" "${MASTER_RESERVED_IP}"
+    fi
   fi
 
-  if [[ "${PARTITION_TO_UPDATE:-unknown}" == "tenant_partition_one" ]]; then 
-    update-proxy "tenant_partition_one_ip" "${MASTER_RESERVED_IP}"
+  if [[ "${PARTITION_TO_UPDATE:-unknown}" == "tenant_partition_one" ]]; then
+    if [[ "${PROXY_SERVICE_PER_TP:-false} == "true" ]]; then
+      local_name=${PROXY_NAME}
+      export PROXY_NAME=${PROXY_NAME}-${PROXY_SUFFIX}
+      update-proxy "tenant_partition_one_ip" "${MASTER_RESERVED_IP}"
+      export PROXY_NAME=${local_name}
+    else
+      update-proxy "tenant_partition_one_ip" "${MASTER_RESERVED_IP}"
+    fi
   fi
 
-  if [[ "${PARTITION_TO_UPDATE:-unknown}" == "tenant_partition_two" ]]; then 
-    update-proxy "tenant_partition_two_ip" "${MASTER_RESERVED_IP}"
+  if [[ "${PARTITION_TO_UPDATE:-unknown}" == "tenant_partition_two" ]]; then
+    if [[ "${PROXY_SERVICE_PER_TP:-false} == "true" ]]; then
+      local_name=${PROXY_NAME}
+      export PROXY_NAME=${PROXY_NAME}-${PROXY_SUFFIX}
+      update-proxy "tenant_partition_two_ip" "${MASTER_RESERVED_IP}"
+      export PROXY_NAME=${local_name}
+    else
+      update-proxy "tenant_partition_two_ip" "${MASTER_RESERVED_IP}"
+    fi
+
   fi
 
 
