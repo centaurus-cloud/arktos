@@ -742,9 +742,10 @@ func TestUpdateNodeStatusWithRuntimeStateError(t *testing.T) {
 		kubeClient.ClearActions()
 		assert.NoError(t, kubelet.updateNodeStatus())
 		actions := kubeClient.Actions()
-		require.Len(t, actions, 2)
-		require.True(t, actions[1].Matches("patch", "nodes"))
-		require.Equal(t, actions[1].GetSubresource(), "status")
+		actionNum := len(actions)
+		require.True(t, actionNum == 1 || actionNum == 2) // get can be optional
+		require.True(t, actions[actionNum-1].Matches("patch", "nodes"))
+		require.Equal(t, actions[actionNum-1].GetSubresource(), "status")
 
 		updatedNode, err := kubeClient.CoreV1().Nodes().Get(testKubeletHostname, metav1.GetOptions{})
 		require.NoError(t, err, "can't apply node status patch")
@@ -1017,12 +1018,13 @@ func TestUpdateNodeStatusWithLease(t *testing.T) {
 	clock.Step(time.Minute)
 	assert.NoError(t, kubelet.updateNodeStatus())
 
-	// 2 more action (There were 2 actions before).
+	// 1 more action (There were 2 actions before).
 	actions = kubeClient.Actions()
-	assert.Len(t, actions, 4)
-	assert.IsType(t, core.GetActionImpl{}, actions[2])
-	assert.IsType(t, core.PatchActionImpl{}, actions[3])
-	patchAction = actions[3].(core.PatchActionImpl)
+	assert.Len(t, actions, 3)
+	assert.IsType(t, core.GetActionImpl{}, actions[0])
+	assert.IsType(t, core.PatchActionImpl{}, actions[1])
+	assert.IsType(t, core.PatchActionImpl{}, actions[2])
+	patchAction = actions[2].(core.PatchActionImpl)
 
 	updatedNode, err = applyNodeStatusPatch(updatedNode, patchAction.GetPatch())
 	require.NoError(t, err)
@@ -1042,10 +1044,12 @@ func TestUpdateNodeStatusWithLease(t *testing.T) {
 	clock.Step(10 * time.Second)
 	assert.NoError(t, kubelet.updateNodeStatus())
 
-	// Only 1 more action (There were 4 actions before).
+	// Only 0 more action (There were 3 actions before).
 	actions = kubeClient.Actions()
-	assert.Len(t, actions, 5)
-	assert.IsType(t, core.GetActionImpl{}, actions[4])
+	assert.Len(t, actions, 3)
+	assert.IsType(t, core.GetActionImpl{}, actions[0])
+	assert.IsType(t, core.PatchActionImpl{}, actions[1])
+	assert.IsType(t, core.PatchActionImpl{}, actions[2])
 
 	// Update node status again when something is changed.
 	// Report node status even if it is still within the duration of nodeStatusReportFrequency.
@@ -1054,12 +1058,14 @@ func TestUpdateNodeStatusWithLease(t *testing.T) {
 	kubelet.machineInfo.MemoryCapacity = uint64(newMemoryCapacity)
 	assert.NoError(t, kubelet.updateNodeStatus())
 
-	// 2 more action (There were 5 actions before).
+	// 1 more action (There were 3 actions before).
 	actions = kubeClient.Actions()
-	assert.Len(t, actions, 7)
-	assert.IsType(t, core.GetActionImpl{}, actions[5])
-	assert.IsType(t, core.PatchActionImpl{}, actions[6])
-	patchAction = actions[6].(core.PatchActionImpl)
+	assert.Len(t, actions, 4)
+	assert.IsType(t, core.GetActionImpl{}, actions[0])
+	assert.IsType(t, core.PatchActionImpl{}, actions[1])
+	assert.IsType(t, core.PatchActionImpl{}, actions[2])
+	assert.IsType(t, core.PatchActionImpl{}, actions[3])
+	patchAction = actions[3].(core.PatchActionImpl)
 
 	updatedNode, err = applyNodeStatusPatch(updatedNode, patchAction.GetPatch())
 	require.NoError(t, err)
@@ -1078,29 +1084,50 @@ func TestUpdateNodeStatusWithLease(t *testing.T) {
 
 	// Update node status when changing pod CIDR.
 	// Report node status if it is still within the duration of nodeStatusReportFrequency.
-	clock.Step(10 * time.Second)
+	clock.Step(time.Minute)
 	assert.Equal(t, "", kubelet.runtimeState.podCIDR(), "Pod CIDR should be empty")
 	podCIDR := "10.0.0.0/24"
 	updatedNode.Spec.PodCIDR = podCIDR
-	kubeClient.ReactionChain = fake.NewSimpleClientset(&v1.NodeList{Items: []v1.Node{*updatedNode}}).ReactionChain
+
+	fakeClient := &fake.Clientset{}
+	patchTimes := 0
+	fakeClient.AddReactor("patch", "nodes", func(action core.Action) (bool, runtime.Object, error) {
+		if patchTimes == 0 {
+			patchTimes++
+			return true, nil, apierrors.NewResourceExpired("Resource was updated")
+		} else {
+			patchTimes++
+			return true, updatedNode, nil
+		}
+	})
+	fakeClient.AddReactor("get", "nodes", func(action core.Action) (bool, runtime.Object, error) {
+		return true, updatedNode, nil
+	})
+	kubeClient.ReactionChain = fakeClient.ReactionChain
 	assert.NoError(t, kubelet.updateNodeStatus())
 	assert.Equal(t, podCIDR, kubelet.runtimeState.podCIDR(), "Pod CIDR should be updated now")
-	// 2 more action (There were 7 actions before).
+	// 3 more action (There were 4 actions before).
 	actions = kubeClient.Actions()
-	assert.Len(t, actions, 9)
-	assert.IsType(t, core.GetActionImpl{}, actions[7])
-	assert.IsType(t, core.PatchActionImpl{}, actions[8])
-	patchAction = actions[8].(core.PatchActionImpl)
+	assert.Len(t, actions, 7)
+	assert.IsType(t, core.GetActionImpl{}, actions[0])
+	assert.IsType(t, core.PatchActionImpl{}, actions[1])
+	assert.IsType(t, core.PatchActionImpl{}, actions[2])
+	assert.IsType(t, core.PatchActionImpl{}, actions[3])
+	assert.IsType(t, core.PatchActionImpl{}, actions[4])
+	assert.IsType(t, core.GetActionImpl{}, actions[5])
+	assert.IsType(t, core.PatchActionImpl{}, actions[6])
+	patchAction = actions[6].(core.PatchActionImpl)
 
 	// Update node status when keeping the pod CIDR.
 	// Do not report node status if it is within the duration of nodeStatusReportFrequency.
+	kubeClient.ReactionChain = fake.NewSimpleClientset(&v1.NodeList{Items: []v1.Node{*updatedNode}}).ReactionChain
 	clock.Step(10 * time.Second)
 	assert.Equal(t, podCIDR, kubelet.runtimeState.podCIDR(), "Pod CIDR should already be updated")
 	assert.NoError(t, kubelet.updateNodeStatus())
-	// Only 1 more action (There were 9 actions before).
+	// No more action (There were 7 actions before).
 	actions = kubeClient.Actions()
-	assert.Len(t, actions, 10)
-	assert.IsType(t, core.GetActionImpl{}, actions[9])
+	assert.Len(t, actions, 7)
+	patchAction = actions[6].(core.PatchActionImpl)
 }
 
 func TestUpdateNodeStatusAndVolumesInUseWithoutNodeLease(t *testing.T) {
