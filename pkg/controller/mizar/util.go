@@ -16,6 +16,7 @@ package mizar
 import (
 	"encoding/json"
 	"strconv"
+	"k8s.io/klog"
 
 	v1 "k8s.io/api/core/v1"
 )
@@ -61,6 +62,9 @@ func ConvertToServiceEndpointContract(endpoints *v1.Endpoints, service *v1.Servi
 	}
 	portsJson, _ := json.Marshal(ports)
 
+	klog.Infof("Endpoint Name: %s, Namespace: %s, Tenant: %s, Backend Ips: %s, Ports: %s",
+	                        endpoints.Name, endpoints.Namespace, endpoints.Tenant, string(backendIpsJson), string(portsJson))
+
 	return &BuiltinsServiceEndpointMessage{
 		Name:           endpoints.Name,
 		Namespace:      endpoints.Namespace,
@@ -80,6 +84,9 @@ func ConvertToPodContract(pod *v1.Pod) *BuiltinsPodMessage {
 		network = ""
 	}
 
+	klog.Infof("Pod Name: %s, HostIP: %s, Namespace: %s, Tenant: %s, Arktos network: %s",
+			pod.Name, pod.Status.HostIP, pod.Namespace, pod.Tenant, network)
+
 	return &BuiltinsPodMessage{
 		Name:          pod.Name,
 		HostIp:        pod.Status.HostIP,
@@ -98,6 +105,8 @@ func ConvertToNodeContract(node *v1.Node) *BuiltinsNodeMessage {
 			break
 		}
 	}
+
+	klog.Infof("Node Name: %s, IP: %s", node.Name, ip)
 	return &BuiltinsNodeMessage{
 		Name: node.Name,
 		Ip:   ip,
