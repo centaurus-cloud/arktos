@@ -740,7 +740,7 @@ func PrioritizeNodes(
 		}
 	}
 
-	klog.V(2).Infof("Number of nodes: %v", len(nodes))
+	klog.V(6).Infof("Number of nodes: %v", len(nodes))
 	// TODO: make this configurable so we can test perf impact when increasing or decreasing concurrency
 	//       on a 96 core machine, it can be much more than 16 concurrent threads to run the processNode function
 	workqueue.ParallelizeUntil(context.TODO(), 16, len(nodes), func(index int) {

@@ -42,6 +42,7 @@ import (
 	framework "k8s.io/kubernetes/pkg/scheduler/framework/v1alpha1"
 	"k8s.io/kubernetes/pkg/scheduler/metrics"
 	"k8s.io/kubernetes/pkg/scheduler/util"
+	utiltrace "k8s.io/utils/trace"
 )
 
 var (
@@ -205,10 +206,13 @@ func (p *PriorityQueue) run() {
 // Add adds a pod to the active queue. It should be called only when a new pod
 // is added so there is no chance the pod is already in active/unschedulable/backoff queues
 func (p *PriorityQueue) Add(pod *v1.Pod) error {
+	trace := utiltrace.New(fmt.Sprintf("Adding Pod %s-%s to queue", pod.Namespace, pod.Name))
+	defer trace.LogIfLong(5 * time.Millisecond)
+
 	p.lock.Lock()
 	defer p.lock.Unlock()
 	klog.V(2).Infof("adding pod %v/%v/%v to the scheduling queue.", pod.Tenant, pod.Namespace, pod.Name)
-
+	trace.Step("Adding pod")
 	pInfo := p.newPodInfo(pod)
 	if err := p.activeQ.Add(pInfo); err != nil {
 		klog.Errorf("Error adding pod %v/%v/%v to the scheduling queue: %v", pod.Tenant, pod.Namespace, pod.Name, err)
@@ -223,6 +227,8 @@ func (p *PriorityQueue) Add(pod *v1.Pod) error {
 		klog.Errorf("Error: pod %v/%v/%v is already in the podBackoff queue.", pod.Tenant, pod.Namespace, pod.Name)
 	}
 	p.nominatedPods.add(pod, "")
+
+	trace.Step("Boradcasting pod")
 	p.cond.Broadcast()
 
 	return nil
@@ -391,8 +397,11 @@ func (p *PriorityQueue) flushUnschedulableQLeftover() {
 // activeQ is empty and waits until a new item is added to the queue. It
 // increments scheduling cycle when a pod is popped.
 func (p *PriorityQueue) Pop() (*v1.Pod, error) {
+	start := time.Now()
+
 	p.lock.Lock()
 	defer p.lock.Unlock()
+
 	for p.activeQ.Len() == 0 {
 		// When the queue is empty, invocation of Pop() is blocked until new item is enqueued.
 		// When Close() is called, the p.closed is set and the condition is broadcast,
@@ -402,12 +411,16 @@ func (p *PriorityQueue) Pop() (*v1.Pod, error) {
 		}
 		p.cond.Wait()
 	}
+
 	obj, err := p.activeQ.Pop()
 	if err != nil {
 		return nil, err
 	}
 	pInfo := obj.(*framework.PodInfo)
 	p.schedulingCycle++
+
+	end := time.Now()
+	klog.V(2).Infof("Pop pod %v-%v, duration %v ms", pInfo.Pod.Namespace, pInfo.Pod.Name, end.Sub(start).Milliseconds())
 	return pInfo.Pod, err
 }
 

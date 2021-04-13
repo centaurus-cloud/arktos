@@ -401,13 +401,17 @@ func getTPMapMatchingExistingAntiAffinity(pod *v1.Pod, nodeInfoMap map[string]*s
 		existingPods := nodeInfo.PodsWithAffinity()
 		klog.V(6).Infof("Node %v, Pods with Affinity: %v", nodeInfo.Node().Name, len(existingPods))
 		for _, existingPod := range existingPods {
+			// in current arktos perf runs, this should not be reached
+			klog.V(2).Infof("DEBUG: this should not be reached. print out the pod: %v-%v", existingPod.Namespace, existingPod.Name)
 			existingPodTopologyMaps, err := getMatchingAntiAffinityTopologyPairsOfPod(pod, existingPod, node)
 			if err != nil {
 				catchError(err)
 				cancel()
 				return
 			}
-			appendTopologyPairsMaps(existingPodTopologyMaps)
+			if existingPodTopologyMaps!=nil {
+				appendTopologyPairsMaps(existingPodTopologyMaps)
+			}
 		}
 	}
 

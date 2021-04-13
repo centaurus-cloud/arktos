@@ -357,7 +357,7 @@ func (cache *schedulerCache) ForgetPod(pod *v1.Pod) error {
 func (cache *schedulerCache) addPod(pod *v1.Pod) {
 	n, ok := cache.nodes[pod.Spec.NodeName]
 	if !ok {
-		// TODO - check whether RP id should be availalble now
+		// TODO - check whether RP id should be available now
 		n = newNodeInfoListItem(schedulernodeinfo.NewNodeInfo())
 		cache.nodes[pod.Spec.NodeName] = n
 	}
