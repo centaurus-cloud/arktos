@@ -74,7 +74,7 @@ func newFoo(name string, replicas *int32) *samplecontroller.Foo {
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      name,
 			Namespace: metav1.NamespaceDefault,
-			Tenant:    metav1.TenantSystem,
+			Tenant:    metav1.TenantNone,
 		},
 		Spec: samplecontroller.FooSpec{
 			DeploymentName: fmt.Sprintf("%s-deployment", name),

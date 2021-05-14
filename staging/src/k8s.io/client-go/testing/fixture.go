@@ -229,7 +229,7 @@ func NewObjectTracker(scheme ObjectScheme, decoder runtime.Decoder) ObjectTracke
 }
 
 func (t *tracker) List(gvr schema.GroupVersionResource, gvk schema.GroupVersionKind, ns string) (runtime.Object, error) {
-	return t.ListWithMultiTenancy(gvr, gvk, ns, metav1.TenantSystem)
+	return t.ListWithMultiTenancy(gvr, gvk, ns, metav1.TenantAll)
 }
 
 func (t *tracker) ListWithMultiTenancy(gvr schema.GroupVersionResource, gvk schema.GroupVersionKind, ns string, tenant string) (runtime.Object, error) {
@@ -272,7 +272,7 @@ func (t *tracker) ListWithMultiTenancy(gvr schema.GroupVersionResource, gvk sche
 }
 
 func (t *tracker) Watch(gvr schema.GroupVersionResource, ns string) (watch.Interface, error) {
-	return t.WatchWithMultiTenancy(gvr, ns, metav1.TenantSystem)
+	return t.WatchWithMultiTenancy(gvr, ns, metav1.TenantAll)
 }
 
 func (t *tracker) WatchWithMultiTenancy(gvr schema.GroupVersionResource, ns string, tenant string) (watch.Interface, error) {
@@ -294,7 +294,7 @@ func (t *tracker) WatchWithMultiTenancy(gvr schema.GroupVersionResource, ns stri
 }
 
 func (t *tracker) Get(gvr schema.GroupVersionResource, ns, name string) (runtime.Object, error) {
-	return t.GetWithMultiTenancy(gvr, ns, name, metav1.TenantSystem)
+	return t.GetWithMultiTenancy(gvr, ns, name, metav1.TenantNone)
 }
 
 func (t *tracker) GetWithMultiTenancy(gvr schema.GroupVersionResource, ns, name string, tenant string) (runtime.Object, error) {
@@ -374,7 +374,7 @@ func (t *tracker) Add(obj runtime.Object) error {
 }
 
 func (t *tracker) Create(gvr schema.GroupVersionResource, obj runtime.Object, ns string) error {
-	return t.add(gvr, obj, ns, false, metav1.TenantSystem)
+	return t.add(gvr, obj, ns, false, metav1.TenantNone)
 }
 
 func (t *tracker) CreateWithMultiTenancy(gvr schema.GroupVersionResource, obj runtime.Object, ns string, tenant string) error {
@@ -382,7 +382,7 @@ func (t *tracker) CreateWithMultiTenancy(gvr schema.GroupVersionResource, obj ru
 }
 
 func (t *tracker) Update(gvr schema.GroupVersionResource, obj runtime.Object, ns string) error {
-	return t.add(gvr, obj, ns, true, metav1.TenantSystem)
+	return t.add(gvr, obj, ns, true, metav1.TenantNone)
 }
 
 func (t *tracker) UpdateWithMultiTenancy(gvr schema.GroupVersionResource, obj runtime.Object, ns string, tenant string) error {
@@ -495,7 +495,7 @@ func (t *tracker) addList(obj runtime.Object, replaceExisting bool) error {
 }
 
 func (t *tracker) Delete(gvr schema.GroupVersionResource, ns, name string) error {
-	return t.DeleteWithMultiTenancy(gvr, ns, name, metav1.TenantSystem)
+	return t.DeleteWithMultiTenancy(gvr, ns, name, metav1.TenantNone)
 }
 
 func (t *tracker) DeleteWithMultiTenancy(gvr schema.GroupVersionResource, ns, name string, tenant string) error {

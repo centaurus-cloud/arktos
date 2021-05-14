@@ -75,7 +75,7 @@ func TestWatchCallNonNamespace(t *testing.T) {
 		t.Fatalf("test resource watch failed in %s: %v ", ns, err)
 	}
 	go func() {
-		err := o.Create(testResource, testObj, ns)
+		err := o.CreateWithMultiTenancy(testResource, testObj, ns, metav1.TenantSystem)
 		if err != nil {
 			t.Errorf("test resource creation failed: %v", err)
 		}
@@ -104,7 +104,7 @@ func TestWatchCallAllNamespace(t *testing.T) {
 		t.Fatalf("test resource watch failed in all namespaces: %v", err)
 	}
 	go func() {
-		err := o.Create(testResource, testObj, ns)
+		err := o.CreateWithMultiTenancy(testResource, testObj, ns, metav1.TenantSystem)
 		assert.NoError(t, err, "test resource creation failed")
 	}()
 	out := <-w.ResultChan()
@@ -114,7 +114,7 @@ func TestWatchCallAllNamespace(t *testing.T) {
 	assert.Equal(t, testObj, out.Object, "watched created object mismatch")
 	assert.Equal(t, testObj, outAll.Object, "watched created object mismatch")
 	go func() {
-		err := o.Update(testResource, testObj, ns)
+		err := o.UpdateWithMultiTenancy(testResource, testObj, ns, metav1.TenantSystem)
 		assert.NoError(t, err, "test resource updating failed")
 	}()
 	out = <-w.ResultChan()
@@ -124,7 +124,7 @@ func TestWatchCallAllNamespace(t *testing.T) {
 	assert.Equal(t, testObj, out.Object, "watched updated object mismatch")
 	assert.Equal(t, testObj, outAll.Object, "watched updated object mismatch")
 	go func() {
-		err := o.Delete(testResource, "test_namespace", "test_name")
+		err := o.DeleteWithMultiTenancy(testResource, "test_namespace", "test_name", metav1.TenantSystem)
 		assert.NoError(t, err, "test resource deletion failed")
 	}()
 	out = <-w.ResultChan()
@@ -199,7 +199,7 @@ func TestWatchCallMultipleInvocation(t *testing.T) {
 	for idx, watchNamespace := range watchNamespaces {
 		i := idx
 		watchNamespace := watchNamespace
-		w, err := o.Watch(testResource, watchNamespace)
+		w, err := o.WatchWithMultiTenancy(testResource, watchNamespace, metav1.TenantSystem)
 		if err != nil {
 			t.Fatalf("test resource watch failed in %s: %v", watchNamespace, err)
 		}
@@ -225,12 +225,12 @@ func TestWatchCallMultipleInvocation(t *testing.T) {
 		switch c.op {
 		case watch.Added:
 			obj := getArbitraryResource(testResource, c.name, c.ns)
-			o.Create(testResource, obj, c.ns)
+			o.CreateWithMultiTenancy(testResource, obj, c.ns, metav1.TenantSystem)
 		case watch.Modified:
 			obj := getArbitraryResource(testResource, c.name, c.ns)
-			o.Update(testResource, obj, c.ns)
+			o.UpdateWithMultiTenancy(testResource, obj, c.ns, metav1.TenantSystem)
 		case watch.Deleted:
-			o.Delete(testResource, c.ns, c.name)
+			o.DeleteWithMultiTenancy(testResource, c.ns, c.name, metav1.TenantSystem)
 		}
 	}
 	wg.Wait()
@@ -261,7 +261,7 @@ func TestWatchAddAfterStop(t *testing.T) {
 	}()
 
 	watch.Stop()
-	err = o.Create(testResource, testObj, ns)
+	err = o.CreateWithMultiTenancy(testResource, testObj, ns, metav1.TenantSystem)
 	if err != nil {
 		t.Errorf("test resource creation failed: %v", err)
 	}

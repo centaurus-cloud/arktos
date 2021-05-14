@@ -47,7 +47,7 @@ type PolicyV1beta1Client struct {
 }
 
 func (c *PolicyV1beta1Client) Evictions(namespace string) EvictionInterface {
-	return newEvictionsWithMultiTenancy(c, namespace, "system")
+	return newEvictionsWithMultiTenancy(c, namespace, "")
 }
 
 func (c *PolicyV1beta1Client) EvictionsWithMultiTenancy(namespace string, tenant string) EvictionInterface {
@@ -55,7 +55,7 @@ func (c *PolicyV1beta1Client) EvictionsWithMultiTenancy(namespace string, tenant
 }
 
 func (c *PolicyV1beta1Client) PodDisruptionBudgets(namespace string) PodDisruptionBudgetInterface {
-	return newPodDisruptionBudgetsWithMultiTenancy(c, namespace, "system")
+	return newPodDisruptionBudgetsWithMultiTenancy(c, namespace, "")
 }
 
 func (c *PolicyV1beta1Client) PodDisruptionBudgetsWithMultiTenancy(namespace string, tenant string) PodDisruptionBudgetInterface {
@@ -63,7 +63,7 @@ func (c *PolicyV1beta1Client) PodDisruptionBudgetsWithMultiTenancy(namespace str
 }
 
 func (c *PolicyV1beta1Client) PodSecurityPolicies() PodSecurityPolicyInterface {
-	return newPodSecurityPoliciesWithMultiTenancy(c, "system")
+	return newPodSecurityPoliciesWithMultiTenancy(c, "")
 }
 
 func (c *PolicyV1beta1Client) PodSecurityPoliciesWithMultiTenancy(tenant string) PodSecurityPolicyInterface {

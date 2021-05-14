@@ -30,7 +30,7 @@ type FakeExtensionsV1beta1 struct {
 }
 
 func (c *FakeExtensionsV1beta1) DaemonSets(namespace string) v1beta1.DaemonSetInterface {
-	return &FakeDaemonSets{c, namespace, "system"}
+	return &FakeDaemonSets{c, namespace, ""}
 }
 
 func (c *FakeExtensionsV1beta1) DaemonSetsWithMultiTenancy(namespace string, tenant string) v1beta1.DaemonSetInterface {
@@ -38,7 +38,7 @@ func (c *FakeExtensionsV1beta1) DaemonSetsWithMultiTenancy(namespace string, ten
 }
 
 func (c *FakeExtensionsV1beta1) Deployments(namespace string) v1beta1.DeploymentInterface {
-	return &FakeDeployments{c, namespace, "system"}
+	return &FakeDeployments{c, namespace, ""}
 }
 
 func (c *FakeExtensionsV1beta1) DeploymentsWithMultiTenancy(namespace string, tenant string) v1beta1.DeploymentInterface {
@@ -46,7 +46,7 @@ func (c *FakeExtensionsV1beta1) DeploymentsWithMultiTenancy(namespace string, te
 }
 
 func (c *FakeExtensionsV1beta1) Ingresses(namespace string) v1beta1.IngressInterface {
-	return &FakeIngresses{c, namespace, "system"}
+	return &FakeIngresses{c, namespace, ""}
 }
 
 func (c *FakeExtensionsV1beta1) IngressesWithMultiTenancy(namespace string, tenant string) v1beta1.IngressInterface {
@@ -54,7 +54,7 @@ func (c *FakeExtensionsV1beta1) IngressesWithMultiTenancy(namespace string, tena
 }
 
 func (c *FakeExtensionsV1beta1) NetworkPolicies(namespace string) v1beta1.NetworkPolicyInterface {
-	return &FakeNetworkPolicies{c, namespace, "system"}
+	return &FakeNetworkPolicies{c, namespace, ""}
 }
 
 func (c *FakeExtensionsV1beta1) NetworkPoliciesWithMultiTenancy(namespace string, tenant string) v1beta1.NetworkPolicyInterface {
@@ -62,7 +62,7 @@ func (c *FakeExtensionsV1beta1) NetworkPoliciesWithMultiTenancy(namespace string
 }
 
 func (c *FakeExtensionsV1beta1) PodSecurityPolicies() v1beta1.PodSecurityPolicyInterface {
-	return &FakePodSecurityPolicies{c, "system"}
+	return &FakePodSecurityPolicies{c, ""}
 }
 
 func (c *FakeExtensionsV1beta1) PodSecurityPoliciesWithMultiTenancy(tenant string) v1beta1.PodSecurityPolicyInterface {
@@ -70,7 +70,7 @@ func (c *FakeExtensionsV1beta1) PodSecurityPoliciesWithMultiTenancy(tenant strin
 }
 
 func (c *FakeExtensionsV1beta1) ReplicaSets(namespace string) v1beta1.ReplicaSetInterface {
-	return &FakeReplicaSets{c, namespace, "system"}
+	return &FakeReplicaSets{c, namespace, ""}
 }
 
 func (c *FakeExtensionsV1beta1) ReplicaSetsWithMultiTenancy(namespace string, tenant string) v1beta1.ReplicaSetInterface {

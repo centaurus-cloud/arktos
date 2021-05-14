@@ -61,7 +61,7 @@ func NewHorizontalPodAutoscalerInformerWithMultiTenancy(client kubernetes.Interf
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
 func NewFilteredHorizontalPodAutoscalerInformer(client kubernetes.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
-	return NewFilteredHorizontalPodAutoscalerInformerWithMultiTenancy(client, namespace, resyncPeriod, indexers, tweakListOptions, "system")
+	return NewFilteredHorizontalPodAutoscalerInformerWithMultiTenancy(client, namespace, resyncPeriod, indexers, tweakListOptions, "all")
 }
 
 func NewFilteredHorizontalPodAutoscalerInformerWithMultiTenancy(client kubernetes.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc, tenant string) cache.SharedIndexInformer {

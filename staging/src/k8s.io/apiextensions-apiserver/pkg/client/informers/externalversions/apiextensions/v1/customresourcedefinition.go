@@ -59,7 +59,7 @@ func NewCustomResourceDefinitionInformerWithMultiTenancy(client clientset.Interf
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
 func NewFilteredCustomResourceDefinitionInformer(client clientset.Interface, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
-	return NewFilteredCustomResourceDefinitionInformerWithMultiTenancy(client, resyncPeriod, indexers, tweakListOptions, "system")
+	return NewFilteredCustomResourceDefinitionInformerWithMultiTenancy(client, resyncPeriod, indexers, tweakListOptions, "all")
 }
 
 func NewFilteredCustomResourceDefinitionInformerWithMultiTenancy(client clientset.Interface, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc, tenant string) cache.SharedIndexInformer {

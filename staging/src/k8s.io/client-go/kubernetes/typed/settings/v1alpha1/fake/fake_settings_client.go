@@ -30,7 +30,7 @@ type FakeSettingsV1alpha1 struct {
 }
 
 func (c *FakeSettingsV1alpha1) PodPresets(namespace string) v1alpha1.PodPresetInterface {
-	return &FakePodPresets{c, namespace, "system"}
+	return &FakePodPresets{c, namespace, ""}
 }
 
 func (c *FakeSettingsV1alpha1) PodPresetsWithMultiTenancy(namespace string, tenant string) v1alpha1.PodPresetInterface {

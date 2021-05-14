@@ -60,7 +60,7 @@ func NewAuditSinkInformerWithMultiTenancy(client kubernetes.Interface, resyncPer
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
 func NewFilteredAuditSinkInformer(client kubernetes.Interface, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
-	return NewFilteredAuditSinkInformerWithMultiTenancy(client, resyncPeriod, indexers, tweakListOptions, "system")
+	return NewFilteredAuditSinkInformerWithMultiTenancy(client, resyncPeriod, indexers, tweakListOptions, "all")
 }
 
 func NewFilteredAuditSinkInformerWithMultiTenancy(client kubernetes.Interface, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc, tenant string) cache.SharedIndexInformer {

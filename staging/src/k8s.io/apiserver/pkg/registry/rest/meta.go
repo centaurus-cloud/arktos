@@ -66,7 +66,7 @@ func ValidTenant(ctx context.Context, resource metav1.Object) bool {
 	tenant, ok := genericapirequest.TenantFrom(ctx)
 
 	// When we are here, we know that the resource need a valid tenant value.
-	// If the tenant value is empty, we set it to "default".
+	// If the tenant value is empty, we set it to the default one, "system".
 	if tenant == "" {
 		tenant = metav1.TenantSystem
 	}

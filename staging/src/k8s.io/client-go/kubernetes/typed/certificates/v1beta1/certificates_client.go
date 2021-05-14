@@ -45,7 +45,7 @@ type CertificatesV1beta1Client struct {
 }
 
 func (c *CertificatesV1beta1Client) CertificateSigningRequests() CertificateSigningRequestInterface {
-	return newCertificateSigningRequestsWithMultiTenancy(c, "system")
+	return newCertificateSigningRequestsWithMultiTenancy(c, "")
 }
 
 func (c *CertificatesV1beta1Client) CertificateSigningRequestsWithMultiTenancy(tenant string) CertificateSigningRequestInterface {

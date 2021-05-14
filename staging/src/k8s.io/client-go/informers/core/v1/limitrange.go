@@ -61,7 +61,7 @@ func NewLimitRangeInformerWithMultiTenancy(client kubernetes.Interface, namespac
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
 func NewFilteredLimitRangeInformer(client kubernetes.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
-	return NewFilteredLimitRangeInformerWithMultiTenancy(client, namespace, resyncPeriod, indexers, tweakListOptions, "system")
+	return NewFilteredLimitRangeInformerWithMultiTenancy(client, namespace, resyncPeriod, indexers, tweakListOptions, "all")
 }
 
 func NewFilteredLimitRangeInformerWithMultiTenancy(client kubernetes.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc, tenant string) cache.SharedIndexInformer {

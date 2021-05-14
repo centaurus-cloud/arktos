@@ -30,7 +30,7 @@ type FakeNetworkingV1 struct {
 }
 
 func (c *FakeNetworkingV1) NetworkPolicies(namespace string) v1.NetworkPolicyInterface {
-	return &FakeNetworkPolicies{c, namespace, "system"}
+	return &FakeNetworkPolicies{c, namespace, ""}
 }
 
 func (c *FakeNetworkingV1) NetworkPoliciesWithMultiTenancy(namespace string, tenant string) v1.NetworkPolicyInterface {

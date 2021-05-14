@@ -154,7 +154,7 @@ func testLogsForObject(t *testing.T, tenant string) {
 			},
 			pods: []runtime.Object{testPod(tenant)},
 			actions: []testclient.Action{
-				testclient.NewListAction(podsResource, podsKind, "test", metav1.ListOptions{LabelSelector: "foo=bar"}),
+				testclient.NewListActionWithMultiTenancy(podsResource, podsKind, "test", metav1.ListOptions{LabelSelector: "foo=bar"}, metav1.TenantSystem),
 				getLogsAction(tenant, "test", nil),
 			},
 		},
@@ -168,7 +168,7 @@ func testLogsForObject(t *testing.T, tenant string) {
 			},
 			pods: []runtime.Object{testPod(tenant)},
 			actions: []testclient.Action{
-				testclient.NewListAction(podsResource, podsKind, "test", metav1.ListOptions{LabelSelector: "foo=bar"}),
+				testclient.NewListActionWithMultiTenancy(podsResource, podsKind, "test", metav1.ListOptions{LabelSelector: "foo=bar"}, metav1.TenantSystem),
 				getLogsAction(tenant, "test", nil),
 			},
 		},
@@ -182,7 +182,7 @@ func testLogsForObject(t *testing.T, tenant string) {
 			},
 			pods: []runtime.Object{testPod(tenant)},
 			actions: []testclient.Action{
-				testclient.NewListAction(podsResource, podsKind, "test", metav1.ListOptions{LabelSelector: "foo=bar"}),
+				testclient.NewListActionWithMultiTenancy(podsResource, podsKind, "test", metav1.ListOptions{LabelSelector: "foo=bar"}, metav1.TenantSystem),
 				getLogsAction(tenant, "test", nil),
 			},
 		},
@@ -196,7 +196,7 @@ func testLogsForObject(t *testing.T, tenant string) {
 			},
 			pods: []runtime.Object{testPod(tenant)},
 			actions: []testclient.Action{
-				testclient.NewListAction(podsResource, podsKind, "test", metav1.ListOptions{LabelSelector: "foo=bar"}),
+				testclient.NewListActionWithMultiTenancy(podsResource, podsKind, "test", metav1.ListOptions{LabelSelector: "foo=bar"}, metav1.TenantSystem),
 				getLogsAction(tenant, "test", nil),
 			},
 		},
@@ -210,7 +210,7 @@ func testLogsForObject(t *testing.T, tenant string) {
 			},
 			pods: []runtime.Object{testPod(tenant)},
 			actions: []testclient.Action{
-				testclient.NewListAction(podsResource, podsKind, "test", metav1.ListOptions{LabelSelector: "foo=bar"}),
+				testclient.NewListActionWithMultiTenancy(podsResource, podsKind, "test", metav1.ListOptions{LabelSelector: "foo=bar"}, metav1.TenantSystem),
 				getLogsAction(tenant, "test", nil),
 			},
 		},

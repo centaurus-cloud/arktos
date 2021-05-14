@@ -67,7 +67,7 @@ func (g *versionInterfaceGenerator) GenerateType(c *generator.Context, t *types.
 		"interfacesTweakListOptionsFunc":  c.Universe.Type(types.Name{Package: g.internalInterfacesPackage, Name: "TweakListOptionsFunc"}),
 		"interfacesSharedInformerFactory": c.Universe.Type(types.Name{Package: g.internalInterfacesPackage, Name: "SharedInformerFactory"}),
 		"types":                           g.types,
-		"DefaultTenant":                   metav1.TenantSystem,
+		"DefaultTenant":                   metav1.TenantAll,
 	}
 
 	sw.Do(versionTemplate, m)

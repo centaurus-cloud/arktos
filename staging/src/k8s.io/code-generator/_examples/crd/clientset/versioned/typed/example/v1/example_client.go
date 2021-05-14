@@ -50,7 +50,7 @@ func (c *ExampleV1Client) ClusterTestTypes() ClusterTestTypeInterface {
 }
 
 func (c *ExampleV1Client) TestTypes(namespace string) TestTypeInterface {
-	return newTestTypesWithMultiTenancy(c, namespace, "system")
+	return newTestTypesWithMultiTenancy(c, namespace, "")
 }
 
 func (c *ExampleV1Client) TestTypesWithMultiTenancy(namespace string, tenant string) TestTypeInterface {

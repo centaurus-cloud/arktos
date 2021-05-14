@@ -66,7 +66,7 @@ type certificateSigningRequests struct {
 
 // newCertificateSigningRequests returns a CertificateSigningRequests
 func newCertificateSigningRequests(c *CertificatesV1beta1Client) *certificateSigningRequests {
-	return newCertificateSigningRequestsWithMultiTenancy(c, "system")
+	return newCertificateSigningRequestsWithMultiTenancy(c, "")
 }
 
 func newCertificateSigningRequestsWithMultiTenancy(c *CertificatesV1beta1Client, tenant string) *certificateSigningRequests {

@@ -66,7 +66,7 @@ type endpoints struct {
 
 // newEndpoints returns a Endpoints
 func newEndpoints(c *CoreV1Client, namespace string) *endpoints {
-	return newEndpointsWithMultiTenancy(c, namespace, "system")
+	return newEndpointsWithMultiTenancy(c, namespace, "")
 }
 
 func newEndpointsWithMultiTenancy(c *CoreV1Client, namespace string, tenant string) *endpoints {

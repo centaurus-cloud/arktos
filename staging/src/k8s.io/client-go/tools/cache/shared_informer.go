@@ -31,6 +31,7 @@ import (
 	"k8s.io/utils/buffer"
 
 	"k8s.io/klog"
+	"runtime/debug"
 )
 
 // SharedInformer provides eventually consistent linkage of its
@@ -301,6 +302,8 @@ func (s *sharedIndexInformer) Run(stopCh <-chan struct{}) {
 		klog.V(4).Infof("start informer with reset channel. %v", s.objectType)
 		s.controller.RunWithReset(stopCh, s.filterBounds)
 	} else {
+		fmt.Printf("\n ---------------------------------- \n")
+		debug.PrintStack()
 		klog.V(4).Infof("start informer without reset channel. %v", s.objectType)
 		s.controller.Run(stopCh)
 	}

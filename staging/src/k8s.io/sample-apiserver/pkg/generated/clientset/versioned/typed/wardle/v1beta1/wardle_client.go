@@ -45,7 +45,7 @@ type WardleV1beta1Client struct {
 }
 
 func (c *WardleV1beta1Client) Flunders(namespace string) FlunderInterface {
-	return newFlundersWithMultiTenancy(c, namespace, "system")
+	return newFlundersWithMultiTenancy(c, namespace, "")
 }
 
 func (c *WardleV1beta1Client) FlundersWithMultiTenancy(namespace string, tenant string) FlunderInterface {

@@ -40,7 +40,7 @@ func (c *FakeStorageV1beta1) CSINodes() v1beta1.CSINodeInterface {
 }
 
 func (c *FakeStorageV1beta1) StorageClasses() v1beta1.StorageClassInterface {
-	return &FakeStorageClasses{c, "system"}
+	return &FakeStorageClasses{c, ""}
 }
 
 func (c *FakeStorageV1beta1) StorageClassesWithMultiTenancy(tenant string) v1beta1.StorageClassInterface {
@@ -48,7 +48,7 @@ func (c *FakeStorageV1beta1) StorageClassesWithMultiTenancy(tenant string) v1bet
 }
 
 func (c *FakeStorageV1beta1) VolumeAttachments() v1beta1.VolumeAttachmentInterface {
-	return &FakeVolumeAttachments{c, "system"}
+	return &FakeVolumeAttachments{c, ""}
 }
 
 func (c *FakeStorageV1beta1) VolumeAttachmentsWithMultiTenancy(tenant string) v1beta1.VolumeAttachmentInterface {

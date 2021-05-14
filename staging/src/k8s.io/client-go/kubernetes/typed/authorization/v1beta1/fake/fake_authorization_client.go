@@ -30,7 +30,7 @@ type FakeAuthorizationV1beta1 struct {
 }
 
 func (c *FakeAuthorizationV1beta1) LocalSubjectAccessReviews(namespace string) v1beta1.LocalSubjectAccessReviewInterface {
-	return &FakeLocalSubjectAccessReviews{c, namespace, "system"}
+	return &FakeLocalSubjectAccessReviews{c, namespace, ""}
 }
 
 func (c *FakeAuthorizationV1beta1) LocalSubjectAccessReviewsWithMultiTenancy(namespace string, tenant string) v1beta1.LocalSubjectAccessReviewInterface {
@@ -38,7 +38,7 @@ func (c *FakeAuthorizationV1beta1) LocalSubjectAccessReviewsWithMultiTenancy(nam
 }
 
 func (c *FakeAuthorizationV1beta1) SelfSubjectAccessReviews() v1beta1.SelfSubjectAccessReviewInterface {
-	return &FakeSelfSubjectAccessReviews{c, "system"}
+	return &FakeSelfSubjectAccessReviews{c, ""}
 }
 
 func (c *FakeAuthorizationV1beta1) SelfSubjectAccessReviewsWithMultiTenancy(tenant string) v1beta1.SelfSubjectAccessReviewInterface {
@@ -46,7 +46,7 @@ func (c *FakeAuthorizationV1beta1) SelfSubjectAccessReviewsWithMultiTenancy(tena
 }
 
 func (c *FakeAuthorizationV1beta1) SelfSubjectRulesReviews() v1beta1.SelfSubjectRulesReviewInterface {
-	return &FakeSelfSubjectRulesReviews{c, "system"}
+	return &FakeSelfSubjectRulesReviews{c, ""}
 }
 
 func (c *FakeAuthorizationV1beta1) SelfSubjectRulesReviewsWithMultiTenancy(tenant string) v1beta1.SelfSubjectRulesReviewInterface {
@@ -54,7 +54,7 @@ func (c *FakeAuthorizationV1beta1) SelfSubjectRulesReviewsWithMultiTenancy(tenan
 }
 
 func (c *FakeAuthorizationV1beta1) SubjectAccessReviews() v1beta1.SubjectAccessReviewInterface {
-	return &FakeSubjectAccessReviews{c, "system"}
+	return &FakeSubjectAccessReviews{c, ""}
 }
 
 func (c *FakeAuthorizationV1beta1) SubjectAccessReviewsWithMultiTenancy(tenant string) v1beta1.SubjectAccessReviewInterface {

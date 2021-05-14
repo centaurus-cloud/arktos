@@ -419,7 +419,7 @@ func TestCreateVolumeSpec_Valid_File_VolumeMounts(t *testing.T) {
 	fakePodManager.AddPod(pod)
 	mountsMap, devicesMap := dswp.makeVolumeMap(pod.Spec.Containers)
 	_, volumeSpec, _, err :=
-		dswp.createVolumeSpec(pod.Spec.Volumes[0], pod.Name, pod.Namespace, metav1.TenantSystem, mountsMap, devicesMap)
+		dswp.createVolumeSpec(pod.Spec.Volumes[0], pod.Name, pod.Namespace, metav1.TenantNone, mountsMap, devicesMap)
 
 	// Assert
 	if volumeSpec == nil || err != nil {
@@ -468,7 +468,7 @@ func TestCreateVolumeSpec_Valid_Block_VolumeDevices(t *testing.T) {
 	fakePodManager.AddPod(pod)
 	mountsMap, devicesMap := dswp.makeVolumeMap(pod.Spec.Containers)
 	_, volumeSpec, _, err :=
-		dswp.createVolumeSpec(pod.Spec.Volumes[0], pod.Name, pod.Namespace, metav1.TenantSystem, mountsMap, devicesMap)
+		dswp.createVolumeSpec(pod.Spec.Volumes[0], pod.Name, pod.Namespace, metav1.TenantNone, mountsMap, devicesMap)
 
 	// Assert
 	if volumeSpec == nil || err != nil {
@@ -517,7 +517,7 @@ func TestCreateVolumeSpec_Invalid_File_VolumeDevices(t *testing.T) {
 	fakePodManager.AddPod(pod)
 	mountsMap, devicesMap := dswp.makeVolumeMap(pod.Spec.Containers)
 	_, volumeSpec, _, err :=
-		dswp.createVolumeSpec(pod.Spec.Volumes[0], pod.Name, pod.Namespace, metav1.TenantSystem, mountsMap, devicesMap)
+		dswp.createVolumeSpec(pod.Spec.Volumes[0], pod.Name, pod.Namespace, metav1.TenantNone, mountsMap, devicesMap)
 
 	// Assert
 	if volumeSpec != nil || err == nil {
@@ -566,7 +566,7 @@ func TestCreateVolumeSpec_Invalid_Block_VolumeMounts(t *testing.T) {
 	fakePodManager.AddPod(pod)
 	mountsMap, devicesMap := dswp.makeVolumeMap(pod.Spec.Containers)
 	_, volumeSpec, _, err :=
-		dswp.createVolumeSpec(pod.Spec.Volumes[0], pod.Name, pod.Namespace, metav1.TenantSystem, mountsMap, devicesMap)
+		dswp.createVolumeSpec(pod.Spec.Volumes[0], pod.Name, pod.Namespace, metav1.TenantNone, mountsMap, devicesMap)
 
 	// Assert
 	if volumeSpec != nil || err == nil {
@@ -746,7 +746,7 @@ func createPodWithVolume(pod, pv, pvc string, containers []v1.Container) *v1.Pod
 			Name:      pod,
 			UID:       "dswp-test-pod-uid",
 			Namespace: "dswp-test",
-			Tenant:    metav1.TenantSystem,
+			Tenant:    metav1.TenantNone,
 		},
 		Spec: v1.PodSpec{
 			Volumes: []v1.Volume{

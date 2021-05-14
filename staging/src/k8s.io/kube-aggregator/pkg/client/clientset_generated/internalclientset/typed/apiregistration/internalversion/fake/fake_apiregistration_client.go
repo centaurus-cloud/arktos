@@ -30,7 +30,7 @@ type FakeApiregistration struct {
 }
 
 func (c *FakeApiregistration) APIServices() internalversion.APIServiceInterface {
-	return &FakeAPIServices{c, "system"}
+	return &FakeAPIServices{c, ""}
 }
 
 func (c *FakeApiregistration) APIServicesWithMultiTenancy(tenant string) internalversion.APIServiceInterface {

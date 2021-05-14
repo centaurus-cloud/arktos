@@ -30,7 +30,7 @@ type FakeAppsV1beta1 struct {
 }
 
 func (c *FakeAppsV1beta1) ControllerRevisions(namespace string) v1beta1.ControllerRevisionInterface {
-	return &FakeControllerRevisions{c, namespace, "system"}
+	return &FakeControllerRevisions{c, namespace, ""}
 }
 
 func (c *FakeAppsV1beta1) ControllerRevisionsWithMultiTenancy(namespace string, tenant string) v1beta1.ControllerRevisionInterface {
@@ -38,7 +38,7 @@ func (c *FakeAppsV1beta1) ControllerRevisionsWithMultiTenancy(namespace string, 
 }
 
 func (c *FakeAppsV1beta1) Deployments(namespace string) v1beta1.DeploymentInterface {
-	return &FakeDeployments{c, namespace, "system"}
+	return &FakeDeployments{c, namespace, ""}
 }
 
 func (c *FakeAppsV1beta1) DeploymentsWithMultiTenancy(namespace string, tenant string) v1beta1.DeploymentInterface {
@@ -46,7 +46,7 @@ func (c *FakeAppsV1beta1) DeploymentsWithMultiTenancy(namespace string, tenant s
 }
 
 func (c *FakeAppsV1beta1) StatefulSets(namespace string) v1beta1.StatefulSetInterface {
-	return &FakeStatefulSets{c, namespace, "system"}
+	return &FakeStatefulSets{c, namespace, ""}
 }
 
 func (c *FakeAppsV1beta1) StatefulSetsWithMultiTenancy(namespace string, tenant string) v1beta1.StatefulSetInterface {

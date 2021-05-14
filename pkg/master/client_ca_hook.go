@@ -121,9 +121,9 @@ func jsonSerializeStringSlice(in []string) (string, error) {
 }
 
 func writeConfigMap(client corev1client.ConfigMapsGetter, name string, data map[string]string) error {
-	existing, err := client.ConfigMaps(metav1.NamespaceSystem).Get(name, metav1.GetOptions{})
+	existing, err := client.ConfigMapsWithMultiTenancy(metav1.NamespaceSystem, metav1.TenantSystem).Get(name, metav1.GetOptions{})
 	if apierrors.IsNotFound(err) {
-		_, err := client.ConfigMaps(metav1.NamespaceSystem).Create(&corev1.ConfigMap{
+		_, err := client.ConfigMapsWithMultiTenancy(metav1.NamespaceSystem, metav1.TenantSystem).Create(&corev1.ConfigMap{
 			ObjectMeta: metav1.ObjectMeta{Tenant: metav1.TenantSystem, Namespace: metav1.NamespaceSystem, Name: name},
 			Data:       data,
 		})
@@ -135,7 +135,7 @@ func writeConfigMap(client corev1client.ConfigMapsGetter, name string, data map[
 
 	if !apiequality.Semantic.DeepEqual(existing.Data, data) {
 		existing.Data = data
-		_, err = client.ConfigMaps(metav1.NamespaceSystem).Update(existing)
+		_, err = client.ConfigMapsWithMultiTenancy(metav1.NamespaceSystem, metav1.TenantSystem).Update(existing)
 	}
 	return err
 }

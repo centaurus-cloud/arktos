@@ -30,7 +30,7 @@ type FakeBatchV1 struct {
 }
 
 func (c *FakeBatchV1) Jobs(namespace string) v1.JobInterface {
-	return &FakeJobs{c, namespace, "system"}
+	return &FakeJobs{c, namespace, ""}
 }
 
 func (c *FakeBatchV1) JobsWithMultiTenancy(namespace string, tenant string) v1.JobInterface {

@@ -230,7 +230,7 @@ func (g *listerGenerator) GenerateType(c *generator.Context, t *types.Type, w io
 		"Resource":      c.Universe.Function(types.Name{Package: t.Name.Package, Name: "Resource"}),
 		"type":          t,
 		"objectMeta":    g.objectMeta,
-		"DefaultTenant": metav1.TenantSystem,
+		"ListAllTenant": metav1.TenantSystem,
 	}
 
 	tags, err := util.ParseClientGenTags(append(t.SecondClosestCommentLines, t.CommentLines...))
@@ -401,7 +401,7 @@ var tenantLister_Get = `
 // Get retrieves the $.type|public$ from the indexer for a given tenant and name.
 func (s $.type|private$TenantLister) Get(name string) (*$.type|raw$, error) {
 	key := s.tenant + "/" + name
-	if s.tenant == "$.DefaultTenant$" {
+	if s.tenant == "$.ListAllTenant$" {
 		key = name
 	}
 	obj, exists, err := s.indexer.GetByKey(key)
@@ -418,7 +418,7 @@ func (s $.type|private$TenantLister) Get(name string) (*$.type|raw$, error) {
 var typeLister_NamespaceLister = `
 // $.type|publicPlural$ returns an object that can list and get $.type|publicPlural$.
 func (s *$.type|private$Lister) $.type|publicPlural$(namespace string) $.type|public$NamespaceLister {
-	return $.type|private$NamespaceLister{indexer: s.indexer, namespace: namespace, tenant: "$.DefaultTenant$"}
+	return $.type|private$NamespaceLister{indexer: s.indexer, namespace: namespace, tenant: "$.ListAllTenant$"}
 }
 
 func (s *$.type|private$Lister) $.type|publicPlural$WithMultiTenancy(namespace string, tenant string) $.type|public$NamespaceLister {
@@ -429,7 +429,7 @@ func (s *$.type|private$Lister) $.type|publicPlural$WithMultiTenancy(namespace s
 var typeLister_TenantLister = `
 // $.type|publicPlural$ returns an object that can list and get $.type|publicPlural$.
 func (s *$.type|private$Lister) $.type|publicPlural$() $.type|public$TenantLister {
-	return $.type|private$TenantLister{indexer: s.indexer, tenant: "$.DefaultTenant$"}
+	return $.type|private$TenantLister{indexer: s.indexer, tenant: "$.ListAllTenant$"}
 }
 
 func (s *$.type|private$Lister) $.type|publicPlural$WithMultiTenancy(tenant string) $.type|public$TenantLister {
@@ -472,7 +472,7 @@ var namespaceLister_Get = `
 // Get retrieves the $.type|public$ from the indexer for a given namespace and name.
 func (s $.type|private$NamespaceLister) Get(name string) (*$.type|raw$, error) {
 	key := s.tenant + "/" +s.namespace + "/" + name
-	if s.tenant == "$.DefaultTenant$" {
+	if s.tenant == "$.ListAllTenant$" {
 		key = s.namespace + "/" + name
 	}
 	obj, exists, err := s.indexer.GetByKey(key)

@@ -65,7 +65,7 @@ type clusterRoles struct {
 
 // newClusterRoles returns a ClusterRoles
 func newClusterRoles(c *RbacV1alpha1Client) *clusterRoles {
-	return newClusterRolesWithMultiTenancy(c, "system")
+	return newClusterRolesWithMultiTenancy(c, "")
 }
 
 func newClusterRolesWithMultiTenancy(c *RbacV1alpha1Client, tenant string) *clusterRoles {

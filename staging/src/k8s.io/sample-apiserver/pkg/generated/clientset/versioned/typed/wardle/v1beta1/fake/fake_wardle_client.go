@@ -30,7 +30,7 @@ type FakeWardleV1beta1 struct {
 }
 
 func (c *FakeWardleV1beta1) Flunders(namespace string) v1beta1.FlunderInterface {
-	return &FakeFlunders{c, namespace, "system"}
+	return &FakeFlunders{c, namespace, ""}
 }
 
 func (c *FakeWardleV1beta1) FlundersWithMultiTenancy(namespace string, tenant string) v1beta1.FlunderInterface {

@@ -30,7 +30,7 @@ type FakeAuditregistrationV1alpha1 struct {
 }
 
 func (c *FakeAuditregistrationV1alpha1) AuditSinks() v1alpha1.AuditSinkInterface {
-	return &FakeAuditSinks{c, "system"}
+	return &FakeAuditSinks{c, ""}
 }
 
 func (c *FakeAuditregistrationV1alpha1) AuditSinksWithMultiTenancy(tenant string) v1alpha1.AuditSinkInterface {

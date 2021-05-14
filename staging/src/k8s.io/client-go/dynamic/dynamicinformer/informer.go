@@ -40,7 +40,7 @@ func NewDynamicSharedInformerFactory(client dynamic.Interface, defaultResync tim
 // NewFilteredDynamicSharedInformerFactory constructs a new instance of dynamicSharedInformerFactory.
 // Listers obtained via this factory will be subject to the same filters as specified here.
 func NewFilteredDynamicSharedInformerFactory(client dynamic.Interface, defaultResync time.Duration, namespace string, tweakListOptions TweakListOptionsFunc) DynamicSharedInformerFactory {
-	return NewFilteredDynamicSharedInformerFactoryWithMultiTenancy(client, defaultResync, namespace, tweakListOptions, metav1.TenantSystem)
+	return NewFilteredDynamicSharedInformerFactoryWithMultiTenancy(client, defaultResync, namespace, tweakListOptions, metav1.TenantAll)
 }
 
 func NewFilteredDynamicSharedInformerFactoryWithMultiTenancy(client dynamic.Interface, defaultResync time.Duration, namespace string, tweakListOptions TweakListOptionsFunc, tenant string) DynamicSharedInformerFactory {
@@ -124,7 +124,7 @@ func (f *dynamicSharedInformerFactory) WaitForCacheSync(stopCh <-chan struct{}) 
 }
 
 func NewFilteredDynamicInformer(f *dynamicSharedInformerFactory, gvr schema.GroupVersionResource, namespace string, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions TweakListOptionsFunc) informers.GenericInformer {
-	return NewFilteredDynamicInformerWithMultiTenancy(f, gvr, namespace, resyncPeriod, indexers, tweakListOptions, metav1.TenantSystem)
+	return NewFilteredDynamicInformerWithMultiTenancy(f, gvr, namespace, resyncPeriod, indexers, tweakListOptions, metav1.TenantAll)
 }
 
 // NewFilteredDynamicInformer constructs a new informer for a dynamic type.

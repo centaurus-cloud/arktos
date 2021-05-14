@@ -30,7 +30,7 @@ type FakeAuthenticationV1beta1 struct {
 }
 
 func (c *FakeAuthenticationV1beta1) TokenReviews() v1beta1.TokenReviewInterface {
-	return &FakeTokenReviews{c, "system"}
+	return &FakeTokenReviews{c, ""}
 }
 
 func (c *FakeAuthenticationV1beta1) TokenReviewsWithMultiTenancy(tenant string) v1beta1.TokenReviewInterface {

@@ -60,7 +60,7 @@ func NewNamespaceInformerWithMultiTenancy(client kubernetes.Interface, resyncPer
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
 func NewFilteredNamespaceInformer(client kubernetes.Interface, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
-	return NewFilteredNamespaceInformerWithMultiTenancy(client, resyncPeriod, indexers, tweakListOptions, "system")
+	return NewFilteredNamespaceInformerWithMultiTenancy(client, resyncPeriod, indexers, tweakListOptions, "all")
 }
 
 func NewFilteredNamespaceInformerWithMultiTenancy(client kubernetes.Interface, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc, tenant string) cache.SharedIndexInformer {

@@ -67,7 +67,7 @@ type cronJobs struct {
 
 // newCronJobs returns a CronJobs
 func newCronJobs(c *BatchV1beta1Client, namespace string) *cronJobs {
-	return newCronJobsWithMultiTenancy(c, namespace, "system")
+	return newCronJobsWithMultiTenancy(c, namespace, "")
 }
 
 func newCronJobsWithMultiTenancy(c *BatchV1beta1Client, namespace string, tenant string) *cronJobs {

@@ -66,7 +66,7 @@ type volumeAttachments struct {
 
 // newVolumeAttachments returns a VolumeAttachments
 func newVolumeAttachments(c *StorageV1alpha1Client) *volumeAttachments {
-	return newVolumeAttachmentsWithMultiTenancy(c, "system")
+	return newVolumeAttachmentsWithMultiTenancy(c, "")
 }
 
 func newVolumeAttachmentsWithMultiTenancy(c *StorageV1alpha1Client, tenant string) *volumeAttachments {

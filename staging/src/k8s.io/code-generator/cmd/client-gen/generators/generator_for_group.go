@@ -123,7 +123,7 @@ func (g *genGroup) GenerateType(c *generator.Context, t *types.Type, w io.Writer
 			"type":          t,
 			"GroupGoName":   g.groupGoName,
 			"Version":       namer.IC(g.version),
-			"DefaultTenant": metav1.TenantSystem,
+			"DefaultTenant": metav1.TenantNone,
 		}
 
 		switch {

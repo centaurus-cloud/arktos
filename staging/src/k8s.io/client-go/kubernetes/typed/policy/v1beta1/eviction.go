@@ -45,7 +45,7 @@ type evictions struct {
 
 // newEvictions returns a Evictions
 func newEvictions(c *PolicyV1beta1Client, namespace string) *evictions {
-	return newEvictionsWithMultiTenancy(c, namespace, "system")
+	return newEvictionsWithMultiTenancy(c, namespace, "")
 }
 
 func newEvictionsWithMultiTenancy(c *PolicyV1beta1Client, namespace string, tenant string) *evictions {

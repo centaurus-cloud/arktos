@@ -66,7 +66,7 @@ type leases struct {
 
 // newLeases returns a Leases
 func newLeases(c *CoordinationV1Client, namespace string) *leases {
-	return newLeasesWithMultiTenancy(c, namespace, "system")
+	return newLeasesWithMultiTenancy(c, namespace, "")
 }
 
 func newLeasesWithMultiTenancy(c *CoordinationV1Client, namespace string, tenant string) *leases {

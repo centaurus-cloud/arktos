@@ -134,7 +134,7 @@ func TestRunAccessCheck(t *testing.T) {
 				GroupVersion:         schema.GroupVersion{Group: "", Version: "v1"},
 				NegotiatedSerializer: ns,
 				Client: fake.CreateHTTPClient(func(req *http.Request) (*http.Response, error) {
-					expectPath := "/apis/authorization.k8s.io/v1/tenants/system/selfsubjectaccessreviews"
+					expectPath := "/apis/authorization.k8s.io/v1/selfsubjectaccessreviews"
 					if req.URL.Path != expectPath {
 						t.Errorf("%s: expected %v, got %v", test.name, expectPath, req.URL.Path)
 						return nil, nil
@@ -207,7 +207,7 @@ func TestRunAccessList(t *testing.T) {
 			NegotiatedSerializer: ns,
 			Client: fake.CreateHTTPClient(func(req *http.Request) (*http.Response, error) {
 				switch req.URL.Path {
-				case "/apis/authorization.k8s.io/v1/tenants/system/selfsubjectrulesreviews":
+				case "/apis/authorization.k8s.io/v1/selfsubjectrulesreviews":
 					body := ioutil.NopCloser(bytes.NewReader([]byte(runtime.EncodeOrDie(codec, getSelfSubjectRulesReview()))))
 					return &http.Response{StatusCode: http.StatusOK, Body: body}, nil
 				default:

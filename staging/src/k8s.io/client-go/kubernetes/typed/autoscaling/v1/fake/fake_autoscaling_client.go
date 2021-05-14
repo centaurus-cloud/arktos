@@ -30,7 +30,7 @@ type FakeAutoscalingV1 struct {
 }
 
 func (c *FakeAutoscalingV1) HorizontalPodAutoscalers(namespace string) v1.HorizontalPodAutoscalerInterface {
-	return &FakeHorizontalPodAutoscalers{c, namespace, "system"}
+	return &FakeHorizontalPodAutoscalers{c, namespace, ""}
 }
 
 func (c *FakeAutoscalingV1) HorizontalPodAutoscalersWithMultiTenancy(namespace string, tenant string) v1.HorizontalPodAutoscalerInterface {

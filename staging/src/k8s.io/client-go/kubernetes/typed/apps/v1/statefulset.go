@@ -71,7 +71,7 @@ type statefulSets struct {
 
 // newStatefulSets returns a StatefulSets
 func newStatefulSets(c *AppsV1Client, namespace string) *statefulSets {
-	return newStatefulSetsWithMultiTenancy(c, namespace, "system")
+	return newStatefulSetsWithMultiTenancy(c, namespace, "")
 }
 
 func newStatefulSetsWithMultiTenancy(c *AppsV1Client, namespace string, tenant string) *statefulSets {

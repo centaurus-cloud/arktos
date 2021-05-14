@@ -122,7 +122,7 @@ func convertIpToMap(endpointsKeys []string, serviceGroupId string) map[string]st
 func TestLeaseEndpointReconciler(t *testing.T) {
 	ns := corev1.NamespaceDefault
 	om := func(name string) metav1.ObjectMeta {
-		return metav1.ObjectMeta{Tenant: metav1.TenantSystem, Namespace: ns, Name: name}
+		return metav1.ObjectMeta{Tenant: metav1.TenantNone, Namespace: ns, Name: name}
 	}
 	reconcileTests := []struct {
 		testName      string
@@ -493,7 +493,7 @@ func TestLeaseEndpointReconciler(t *testing.T) {
 func TestLeaseEndpointNonReconcile(t *testing.T) {
 	ns := corev1.NamespaceDefault
 	om := func(name string) metav1.ObjectMeta {
-		return metav1.ObjectMeta{Tenant: metav1.TenantSystem, Namespace: ns, Name: name}
+		return metav1.ObjectMeta{Tenant: metav1.TenantNone, Namespace: ns, Name: name}
 	}
 
 	nonReconcileTests := []struct {
@@ -601,7 +601,7 @@ func TestLeaseEndpointNonReconcile(t *testing.T) {
 func TestMultipleEndpointSubsetsReconcile(t *testing.T) {
 	ns := corev1.NamespaceDefault
 	om := func(name string) metav1.ObjectMeta {
-		return metav1.ObjectMeta{Tenant: metav1.TenantSystem, Namespace: ns, Name: name}
+		return metav1.ObjectMeta{Tenant: metav1.TenantNone, Namespace: ns, Name: name}
 	}
 
 	reconcileTests := []struct {
@@ -1087,7 +1087,7 @@ func TestMultipleEndpointSubsetsReconcile(t *testing.T) {
 func TestLeaseRemoveEndpoints(t *testing.T) {
 	ns := corev1.NamespaceDefault
 	om := func(name string) metav1.ObjectMeta {
-		return metav1.ObjectMeta{Tenant: metav1.TenantSystem, Namespace: ns, Name: name}
+		return metav1.ObjectMeta{Tenant: metav1.TenantNone, Namespace: ns, Name: name}
 	}
 	stopTests := []struct {
 		testName      string

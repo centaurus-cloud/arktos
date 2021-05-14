@@ -67,7 +67,7 @@ type horizontalPodAutoscalers struct {
 
 // newHorizontalPodAutoscalers returns a HorizontalPodAutoscalers
 func newHorizontalPodAutoscalers(c *AutoscalingV2beta1Client, namespace string) *horizontalPodAutoscalers {
-	return newHorizontalPodAutoscalersWithMultiTenancy(c, namespace, "system")
+	return newHorizontalPodAutoscalersWithMultiTenancy(c, namespace, "")
 }
 
 func newHorizontalPodAutoscalersWithMultiTenancy(c *AutoscalingV2beta1Client, namespace string, tenant string) *horizontalPodAutoscalers {

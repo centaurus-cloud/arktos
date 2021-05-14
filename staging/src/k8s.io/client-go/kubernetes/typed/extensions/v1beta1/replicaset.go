@@ -70,7 +70,7 @@ type replicaSets struct {
 
 // newReplicaSets returns a ReplicaSets
 func newReplicaSets(c *ExtensionsV1beta1Client, namespace string) *replicaSets {
-	return newReplicaSetsWithMultiTenancy(c, namespace, "system")
+	return newReplicaSetsWithMultiTenancy(c, namespace, "")
 }
 
 func newReplicaSetsWithMultiTenancy(c *ExtensionsV1beta1Client, namespace string, tenant string) *replicaSets {

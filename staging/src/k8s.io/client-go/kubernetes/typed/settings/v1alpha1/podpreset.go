@@ -66,7 +66,7 @@ type podPresets struct {
 
 // newPodPresets returns a PodPresets
 func newPodPresets(c *SettingsV1alpha1Client, namespace string) *podPresets {
-	return newPodPresetsWithMultiTenancy(c, namespace, "system")
+	return newPodPresetsWithMultiTenancy(c, namespace, "")
 }
 
 func newPodPresetsWithMultiTenancy(c *SettingsV1alpha1Client, namespace string, tenant string) *podPresets {

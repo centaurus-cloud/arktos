@@ -67,7 +67,7 @@ type daemonSets struct {
 
 // newDaemonSets returns a DaemonSets
 func newDaemonSets(c *ExtensionsV1beta1Client, namespace string) *daemonSets {
-	return newDaemonSetsWithMultiTenancy(c, namespace, "system")
+	return newDaemonSetsWithMultiTenancy(c, namespace, "")
 }
 
 func newDaemonSetsWithMultiTenancy(c *ExtensionsV1beta1Client, namespace string, tenant string) *daemonSets {

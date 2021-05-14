@@ -44,7 +44,7 @@ type subjectAccessReviews struct {
 
 // newSubjectAccessReviews returns a SubjectAccessReviews
 func newSubjectAccessReviews(c *AuthorizationV1Client) *subjectAccessReviews {
-	return newSubjectAccessReviewsWithMultiTenancy(c, "system")
+	return newSubjectAccessReviewsWithMultiTenancy(c, "")
 }
 
 func newSubjectAccessReviewsWithMultiTenancy(c *AuthorizationV1Client, tenant string) *subjectAccessReviews {

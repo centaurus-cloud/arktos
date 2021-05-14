@@ -60,7 +60,7 @@ func NewAPIServiceInformerWithMultiTenancy(client clientset.Interface, resyncPer
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
 func NewFilteredAPIServiceInformer(client clientset.Interface, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
-	return NewFilteredAPIServiceInformerWithMultiTenancy(client, resyncPeriod, indexers, tweakListOptions, "system")
+	return NewFilteredAPIServiceInformerWithMultiTenancy(client, resyncPeriod, indexers, tweakListOptions, "all")
 }
 
 func NewFilteredAPIServiceInformerWithMultiTenancy(client clientset.Interface, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc, tenant string) cache.SharedIndexInformer {

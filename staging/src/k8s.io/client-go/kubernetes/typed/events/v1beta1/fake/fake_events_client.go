@@ -30,7 +30,7 @@ type FakeEventsV1beta1 struct {
 }
 
 func (c *FakeEventsV1beta1) Events(namespace string) v1beta1.EventInterface {
-	return &FakeEvents{c, namespace, "system"}
+	return &FakeEvents{c, namespace, ""}
 }
 
 func (c *FakeEventsV1beta1) EventsWithMultiTenancy(namespace string, tenant string) v1beta1.EventInterface {

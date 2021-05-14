@@ -50,7 +50,7 @@ func NewTenantGetAction(resource schema.GroupVersionResource, name string, tenan
 }
 
 func NewGetAction(resource schema.GroupVersionResource, namespace, name string) GetActionImpl {
-	return NewGetActionWithMultiTenancy(resource, namespace, name, metav1.TenantSystem)
+	return NewGetActionWithMultiTenancy(resource, namespace, name, metav1.TenantNone)
 }
 
 func NewGetActionWithMultiTenancy(resource schema.GroupVersionResource, namespace, name string, tenant string) GetActionImpl {
@@ -65,7 +65,7 @@ func NewGetActionWithMultiTenancy(resource schema.GroupVersionResource, namespac
 }
 
 func NewGetSubresourceAction(resource schema.GroupVersionResource, namespace, subresource, name string) GetActionImpl {
-	return NewGetSubresourceActionWithMultiTenancy(resource, namespace, subresource, name, metav1.TenantSystem)
+	return NewGetSubresourceActionWithMultiTenancy(resource, namespace, subresource, name, metav1.TenantNone)
 }
 
 func NewGetSubresourceActionWithMultiTenancy(resource schema.GroupVersionResource, namespace, subresource, name string, tenant string) GetActionImpl {
@@ -125,7 +125,7 @@ func NewTenantListAction(resource schema.GroupVersionResource, kind schema.Group
 }
 
 func NewListAction(resource schema.GroupVersionResource, kind schema.GroupVersionKind, namespace string, opts interface{}) ListActionImpl {
-	return NewListActionWithMultiTenancy(resource, kind, namespace, opts, metav1.TenantSystem)
+	return NewListActionWithMultiTenancy(resource, kind, namespace, opts, metav1.TenantNone)
 }
 
 func NewListActionWithMultiTenancy(resource schema.GroupVersionResource, kind schema.GroupVersionKind, namespace string, opts interface{}, tenant string) ListActionImpl {
@@ -160,7 +160,7 @@ func NewTenantCreateAction(resource schema.GroupVersionResource, object runtime.
 	return action
 }
 func NewCreateAction(resource schema.GroupVersionResource, namespace string, object runtime.Object) CreateActionImpl {
-	return NewCreateActionWithMultiTenancy(resource, namespace, object, metav1.TenantSystem)
+	return NewCreateActionWithMultiTenancy(resource, namespace, object, metav1.TenantNone)
 }
 
 func NewCreateActionWithMultiTenancy(resource schema.GroupVersionResource, namespace string, object runtime.Object, tenant string) CreateActionImpl {
@@ -198,7 +198,7 @@ func NewTenantCreateSubresourceAction(resource schema.GroupVersionResource, name
 }
 
 func NewCreateSubresourceAction(resource schema.GroupVersionResource, name, subresource, namespace string, object runtime.Object) CreateActionImpl {
-	return NewCreateSubresourceActionWithMultiTenancy(resource, name, subresource, namespace, object, metav1.TenantSystem)
+	return NewCreateSubresourceActionWithMultiTenancy(resource, name, subresource, namespace, object, metav1.TenantNone)
 }
 
 func NewCreateSubresourceActionWithMultiTenancy(resource schema.GroupVersionResource, name, subresource, namespace string, object runtime.Object, tenant string) CreateActionImpl {
@@ -234,7 +234,7 @@ func NewTenantUpdateAction(resource schema.GroupVersionResource, object runtime.
 }
 
 func NewUpdateAction(resource schema.GroupVersionResource, namespace string, object runtime.Object) UpdateActionImpl {
-	return NewUpdateActionWithMultiTenancy(resource, namespace, object, metav1.TenantSystem)
+	return NewUpdateActionWithMultiTenancy(resource, namespace, object, metav1.TenantNone)
 }
 
 func NewUpdateActionWithMultiTenancy(resource schema.GroupVersionResource, namespace string, object runtime.Object, tenant string) UpdateActionImpl {
@@ -272,7 +272,7 @@ func NewTenantPatchAction(resource schema.GroupVersionResource, name string, pt 
 }
 
 func NewPatchAction(resource schema.GroupVersionResource, namespace string, name string, pt types.PatchType, patch []byte) PatchActionImpl {
-	return NewPatchActionWithMultiTenancy(resource, namespace, name, pt, patch, metav1.TenantSystem)
+	return NewPatchActionWithMultiTenancy(resource, namespace, name, pt, patch, metav1.TenantNone)
 }
 
 func NewPatchActionWithMultiTenancy(resource schema.GroupVersionResource, namespace string, name string, pt types.PatchType, patch []byte, tenant string) PatchActionImpl {
@@ -314,7 +314,7 @@ func NewTenantPatchSubresourceAction(resource schema.GroupVersionResource, tenan
 }
 
 func NewPatchSubresourceAction(resource schema.GroupVersionResource, tenant, namespace, name string, pt types.PatchType, patch []byte, subresources ...string) PatchActionImpl {
-	return NewPatchSubresourceActionWithMultiTenancy(resource, metav1.TenantSystem, namespace, name, pt, patch, subresources...)
+	return NewPatchSubresourceActionWithMultiTenancy(resource, metav1.TenantNone, namespace, name, pt, patch, subresources...)
 }
 
 func NewPatchSubresourceActionWithMultiTenancy(resource schema.GroupVersionResource, tenant, namespace, name string, pt types.PatchType, patch []byte, subresources ...string) PatchActionImpl {
@@ -353,7 +353,7 @@ func NewTenantUpdateSubresourceAction(resource schema.GroupVersionResource, subr
 }
 
 func NewUpdateSubresourceAction(resource schema.GroupVersionResource, subresource string, namespace string, object runtime.Object) UpdateActionImpl {
-	return NewUpdateSubresourceActionWithMultiTenancy(resource, subresource, namespace, object, metav1.TenantSystem)
+	return NewUpdateSubresourceActionWithMultiTenancy(resource, subresource, namespace, object, metav1.TenantNone)
 }
 
 func NewUpdateSubresourceActionWithMultiTenancy(resource schema.GroupVersionResource, subresource string, namespace string, object runtime.Object, tenant string) UpdateActionImpl {
@@ -409,7 +409,7 @@ func NewTenantDeleteSubresourceAction(resource schema.GroupVersionResource, subr
 }
 
 func NewDeleteAction(resource schema.GroupVersionResource, namespace, name string) DeleteActionImpl {
-	return NewDeleteActionWithMultiTenancy(resource, namespace, name, metav1.TenantSystem)
+	return NewDeleteActionWithMultiTenancy(resource, namespace, name, metav1.TenantNone)
 }
 
 func NewDeleteActionWithMultiTenancy(resource schema.GroupVersionResource, namespace, name string, tenant string) DeleteActionImpl {
@@ -424,7 +424,7 @@ func NewDeleteActionWithMultiTenancy(resource schema.GroupVersionResource, names
 }
 
 func NewDeleteSubresourceAction(resource schema.GroupVersionResource, subresource, namespace, name string) DeleteActionImpl {
-	return NewDeleteSubresourceActionWithMultiTenancy(resource, subresource, namespace, name, metav1.TenantSystem)
+	return NewDeleteSubresourceActionWithMultiTenancy(resource, subresource, namespace, name, metav1.TenantNone)
 }
 
 func NewDeleteSubresourceActionWithMultiTenancy(resource schema.GroupVersionResource, subresource, namespace, name string, tenant string) DeleteActionImpl {
@@ -461,7 +461,7 @@ func NewTenantDeleteCollectionAction(resource schema.GroupVersionResource, opts 
 }
 
 func NewDeleteCollectionAction(resource schema.GroupVersionResource, namespace string, opts interface{}) DeleteCollectionActionImpl {
-	return NewDeleteCollectionActionWithMultiTenancy(resource, namespace, opts, metav1.TenantSystem)
+	return NewDeleteCollectionActionWithMultiTenancy(resource, namespace, opts, metav1.TenantNone)
 }
 
 func NewDeleteCollectionActionWithMultiTenancy(resource schema.GroupVersionResource, namespace string, opts interface{}, tenant string) DeleteCollectionActionImpl {
@@ -523,7 +523,7 @@ func NewTenantWatchAction(resource schema.GroupVersionResource, opts interface{}
 }
 
 func NewWatchAction(resource schema.GroupVersionResource, namespace string, opts interface{}) WatchActionImpl {
-	return NewWatchActionWithMultiTenancy(resource, namespace, opts, metav1.TenantSystem)
+	return NewWatchActionWithMultiTenancy(resource, namespace, opts, metav1.TenantNone)
 }
 
 func NewWatchActionWithMultiTenancy(resource schema.GroupVersionResource, namespace string, opts interface{}, tenant string) WatchActionImpl {
@@ -539,7 +539,7 @@ func NewWatchActionWithMultiTenancy(resource schema.GroupVersionResource, namesp
 }
 
 func NewProxyGetAction(resource schema.GroupVersionResource, namespace, scheme, name, port, path string, params map[string]string) ProxyGetActionImpl {
-	return NewProxyGetActionWithMultiTenancy(resource, namespace, scheme, name, port, path, params, metav1.TenantSystem)
+	return NewProxyGetActionWithMultiTenancy(resource, namespace, scheme, name, port, path, params, metav1.TenantNone)
 }
 
 func NewProxyGetActionWithMultiTenancy(resource schema.GroupVersionResource, namespace, scheme, name, port, path string, params map[string]string, tenant string) ProxyGetActionImpl {

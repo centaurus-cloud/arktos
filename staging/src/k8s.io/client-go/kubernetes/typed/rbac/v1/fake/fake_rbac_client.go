@@ -30,7 +30,7 @@ type FakeRbacV1 struct {
 }
 
 func (c *FakeRbacV1) ClusterRoles() v1.ClusterRoleInterface {
-	return &FakeClusterRoles{c, "system"}
+	return &FakeClusterRoles{c, ""}
 }
 
 func (c *FakeRbacV1) ClusterRolesWithMultiTenancy(tenant string) v1.ClusterRoleInterface {
@@ -38,7 +38,7 @@ func (c *FakeRbacV1) ClusterRolesWithMultiTenancy(tenant string) v1.ClusterRoleI
 }
 
 func (c *FakeRbacV1) ClusterRoleBindings() v1.ClusterRoleBindingInterface {
-	return &FakeClusterRoleBindings{c, "system"}
+	return &FakeClusterRoleBindings{c, ""}
 }
 
 func (c *FakeRbacV1) ClusterRoleBindingsWithMultiTenancy(tenant string) v1.ClusterRoleBindingInterface {
@@ -46,7 +46,7 @@ func (c *FakeRbacV1) ClusterRoleBindingsWithMultiTenancy(tenant string) v1.Clust
 }
 
 func (c *FakeRbacV1) Roles(namespace string) v1.RoleInterface {
-	return &FakeRoles{c, namespace, "system"}
+	return &FakeRoles{c, namespace, ""}
 }
 
 func (c *FakeRbacV1) RolesWithMultiTenancy(namespace string, tenant string) v1.RoleInterface {
@@ -54,7 +54,7 @@ func (c *FakeRbacV1) RolesWithMultiTenancy(namespace string, tenant string) v1.R
 }
 
 func (c *FakeRbacV1) RoleBindings(namespace string) v1.RoleBindingInterface {
-	return &FakeRoleBindings{c, namespace, "system"}
+	return &FakeRoleBindings{c, namespace, ""}
 }
 
 func (c *FakeRbacV1) RoleBindingsWithMultiTenancy(namespace string, tenant string) v1.RoleBindingInterface {

@@ -45,7 +45,7 @@ type StorageV1alpha1Client struct {
 }
 
 func (c *StorageV1alpha1Client) VolumeAttachments() VolumeAttachmentInterface {
-	return newVolumeAttachmentsWithMultiTenancy(c, "system")
+	return newVolumeAttachmentsWithMultiTenancy(c, "")
 }
 
 func (c *StorageV1alpha1Client) VolumeAttachmentsWithMultiTenancy(tenant string) VolumeAttachmentInterface {

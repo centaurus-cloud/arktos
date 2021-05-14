@@ -66,7 +66,7 @@ type roles struct {
 
 // newRoles returns a Roles
 func newRoles(c *RbacV1alpha1Client, namespace string) *roles {
-	return newRolesWithMultiTenancy(c, namespace, "system")
+	return newRolesWithMultiTenancy(c, namespace, "")
 }
 
 func newRolesWithMultiTenancy(c *RbacV1alpha1Client, namespace string, tenant string) *roles {

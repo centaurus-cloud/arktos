@@ -66,7 +66,7 @@ type limitRanges struct {
 
 // newLimitRanges returns a LimitRanges
 func newLimitRanges(c *CoreV1Client, namespace string) *limitRanges {
-	return newLimitRangesWithMultiTenancy(c, namespace, "system")
+	return newLimitRangesWithMultiTenancy(c, namespace, "")
 }
 
 func newLimitRangesWithMultiTenancy(c *CoreV1Client, namespace string, tenant string) *limitRanges {

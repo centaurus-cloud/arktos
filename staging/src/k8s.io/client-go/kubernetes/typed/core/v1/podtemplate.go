@@ -66,7 +66,7 @@ type podTemplates struct {
 
 // newPodTemplates returns a PodTemplates
 func newPodTemplates(c *CoreV1Client, namespace string) *podTemplates {
-	return newPodTemplatesWithMultiTenancy(c, namespace, "system")
+	return newPodTemplatesWithMultiTenancy(c, namespace, "")
 }
 
 func newPodTemplatesWithMultiTenancy(c *CoreV1Client, namespace string, tenant string) *podTemplates {

@@ -30,7 +30,7 @@ type FakeCrV1 struct {
 }
 
 func (c *FakeCrV1) Examples(namespace string) v1.ExampleInterface {
-	return &FakeExamples{c, namespace, "system"}
+	return &FakeExamples{c, namespace, ""}
 }
 
 func (c *FakeCrV1) ExamplesWithMultiTenancy(namespace string, tenant string) v1.ExampleInterface {

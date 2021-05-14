@@ -30,7 +30,7 @@ type FakeCoreV1 struct {
 }
 
 func (c *FakeCoreV1) Actions(namespace string) v1.ActionInterface {
-	return &FakeActions{c, namespace, "system"}
+	return &FakeActions{c, namespace, ""}
 }
 
 func (c *FakeCoreV1) ActionsWithMultiTenancy(namespace string, tenant string) v1.ActionInterface {
@@ -43,7 +43,7 @@ func (c *FakeCoreV1) ComponentStatuses() v1.ComponentStatusInterface {
 }
 
 func (c *FakeCoreV1) ConfigMaps(namespace string) v1.ConfigMapInterface {
-	return &FakeConfigMaps{c, namespace, "system"}
+	return &FakeConfigMaps{c, namespace, ""}
 }
 
 func (c *FakeCoreV1) ConfigMapsWithMultiTenancy(namespace string, tenant string) v1.ConfigMapInterface {
@@ -61,7 +61,7 @@ func (c *FakeCoreV1) DataPartitionConfigs() v1.DataPartitionConfigInterface {
 }
 
 func (c *FakeCoreV1) Endpoints(namespace string) v1.EndpointsInterface {
-	return &FakeEndpoints{c, namespace, "system"}
+	return &FakeEndpoints{c, namespace, ""}
 }
 
 func (c *FakeCoreV1) EndpointsWithMultiTenancy(namespace string, tenant string) v1.EndpointsInterface {
@@ -69,7 +69,7 @@ func (c *FakeCoreV1) EndpointsWithMultiTenancy(namespace string, tenant string) 
 }
 
 func (c *FakeCoreV1) Events(namespace string) v1.EventInterface {
-	return &FakeEvents{c, namespace, "system"}
+	return &FakeEvents{c, namespace, ""}
 }
 
 func (c *FakeCoreV1) EventsWithMultiTenancy(namespace string, tenant string) v1.EventInterface {
@@ -77,7 +77,7 @@ func (c *FakeCoreV1) EventsWithMultiTenancy(namespace string, tenant string) v1.
 }
 
 func (c *FakeCoreV1) LimitRanges(namespace string) v1.LimitRangeInterface {
-	return &FakeLimitRanges{c, namespace, "system"}
+	return &FakeLimitRanges{c, namespace, ""}
 }
 
 func (c *FakeCoreV1) LimitRangesWithMultiTenancy(namespace string, tenant string) v1.LimitRangeInterface {
@@ -85,7 +85,7 @@ func (c *FakeCoreV1) LimitRangesWithMultiTenancy(namespace string, tenant string
 }
 
 func (c *FakeCoreV1) Namespaces() v1.NamespaceInterface {
-	return &FakeNamespaces{c, "system"}
+	return &FakeNamespaces{c, ""}
 }
 
 func (c *FakeCoreV1) NamespacesWithMultiTenancy(tenant string) v1.NamespaceInterface {
@@ -98,7 +98,7 @@ func (c *FakeCoreV1) Nodes() v1.NodeInterface {
 }
 
 func (c *FakeCoreV1) PersistentVolumes() v1.PersistentVolumeInterface {
-	return &FakePersistentVolumes{c, "system"}
+	return &FakePersistentVolumes{c, ""}
 }
 
 func (c *FakeCoreV1) PersistentVolumesWithMultiTenancy(tenant string) v1.PersistentVolumeInterface {
@@ -106,7 +106,7 @@ func (c *FakeCoreV1) PersistentVolumesWithMultiTenancy(tenant string) v1.Persist
 }
 
 func (c *FakeCoreV1) PersistentVolumeClaims(namespace string) v1.PersistentVolumeClaimInterface {
-	return &FakePersistentVolumeClaims{c, namespace, "system"}
+	return &FakePersistentVolumeClaims{c, namespace, ""}
 }
 
 func (c *FakeCoreV1) PersistentVolumeClaimsWithMultiTenancy(namespace string, tenant string) v1.PersistentVolumeClaimInterface {
@@ -114,7 +114,7 @@ func (c *FakeCoreV1) PersistentVolumeClaimsWithMultiTenancy(namespace string, te
 }
 
 func (c *FakeCoreV1) Pods(namespace string) v1.PodInterface {
-	return &FakePods{c, namespace, "system"}
+	return &FakePods{c, namespace, ""}
 }
 
 func (c *FakeCoreV1) PodsWithMultiTenancy(namespace string, tenant string) v1.PodInterface {
@@ -122,7 +122,7 @@ func (c *FakeCoreV1) PodsWithMultiTenancy(namespace string, tenant string) v1.Po
 }
 
 func (c *FakeCoreV1) PodTemplates(namespace string) v1.PodTemplateInterface {
-	return &FakePodTemplates{c, namespace, "system"}
+	return &FakePodTemplates{c, namespace, ""}
 }
 
 func (c *FakeCoreV1) PodTemplatesWithMultiTenancy(namespace string, tenant string) v1.PodTemplateInterface {
@@ -130,7 +130,7 @@ func (c *FakeCoreV1) PodTemplatesWithMultiTenancy(namespace string, tenant strin
 }
 
 func (c *FakeCoreV1) ReplicationControllers(namespace string) v1.ReplicationControllerInterface {
-	return &FakeReplicationControllers{c, namespace, "system"}
+	return &FakeReplicationControllers{c, namespace, ""}
 }
 
 func (c *FakeCoreV1) ReplicationControllersWithMultiTenancy(namespace string, tenant string) v1.ReplicationControllerInterface {
@@ -138,7 +138,7 @@ func (c *FakeCoreV1) ReplicationControllersWithMultiTenancy(namespace string, te
 }
 
 func (c *FakeCoreV1) ResourceQuotas(namespace string) v1.ResourceQuotaInterface {
-	return &FakeResourceQuotas{c, namespace, "system"}
+	return &FakeResourceQuotas{c, namespace, ""}
 }
 
 func (c *FakeCoreV1) ResourceQuotasWithMultiTenancy(namespace string, tenant string) v1.ResourceQuotaInterface {
@@ -146,7 +146,7 @@ func (c *FakeCoreV1) ResourceQuotasWithMultiTenancy(namespace string, tenant str
 }
 
 func (c *FakeCoreV1) Secrets(namespace string) v1.SecretInterface {
-	return &FakeSecrets{c, namespace, "system"}
+	return &FakeSecrets{c, namespace, ""}
 }
 
 func (c *FakeCoreV1) SecretsWithMultiTenancy(namespace string, tenant string) v1.SecretInterface {
@@ -154,7 +154,7 @@ func (c *FakeCoreV1) SecretsWithMultiTenancy(namespace string, tenant string) v1
 }
 
 func (c *FakeCoreV1) Services(namespace string) v1.ServiceInterface {
-	return &FakeServices{c, namespace, "system"}
+	return &FakeServices{c, namespace, ""}
 }
 
 func (c *FakeCoreV1) ServicesWithMultiTenancy(namespace string, tenant string) v1.ServiceInterface {
@@ -162,7 +162,7 @@ func (c *FakeCoreV1) ServicesWithMultiTenancy(namespace string, tenant string) v
 }
 
 func (c *FakeCoreV1) ServiceAccounts(namespace string) v1.ServiceAccountInterface {
-	return &FakeServiceAccounts{c, namespace, "system"}
+	return &FakeServiceAccounts{c, namespace, ""}
 }
 
 func (c *FakeCoreV1) ServiceAccountsWithMultiTenancy(namespace string, tenant string) v1.ServiceAccountInterface {

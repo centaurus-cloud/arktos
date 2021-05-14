@@ -45,7 +45,7 @@ type AuditregistrationV1alpha1Client struct {
 }
 
 func (c *AuditregistrationV1alpha1Client) AuditSinks() AuditSinkInterface {
-	return newAuditSinksWithMultiTenancy(c, "system")
+	return newAuditSinksWithMultiTenancy(c, "")
 }
 
 func (c *AuditregistrationV1alpha1Client) AuditSinksWithMultiTenancy(tenant string) AuditSinkInterface {

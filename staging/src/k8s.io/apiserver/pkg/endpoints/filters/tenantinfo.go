@@ -118,6 +118,11 @@ func SetShortPathRequestTenant(req *http.Request) (*http.Request, error) {
 		requestInfo.Tenant = userTenant
 	}
 
+	// regular tenants can only access his own space
+	if resourceTenant == metav1.TenantAll && userTenant != metav1.TenantSystem {
+		requestInfo.Tenant = userTenant
+	}
+
 	req = req.WithContext(request.WithRequestInfo(ctx, requestInfo))
 
 	return req, nil

@@ -30,7 +30,7 @@ type FakePolicyV1beta1 struct {
 }
 
 func (c *FakePolicyV1beta1) Evictions(namespace string) v1beta1.EvictionInterface {
-	return &FakeEvictions{c, namespace, "system"}
+	return &FakeEvictions{c, namespace, ""}
 }
 
 func (c *FakePolicyV1beta1) EvictionsWithMultiTenancy(namespace string, tenant string) v1beta1.EvictionInterface {
@@ -38,7 +38,7 @@ func (c *FakePolicyV1beta1) EvictionsWithMultiTenancy(namespace string, tenant s
 }
 
 func (c *FakePolicyV1beta1) PodDisruptionBudgets(namespace string) v1beta1.PodDisruptionBudgetInterface {
-	return &FakePodDisruptionBudgets{c, namespace, "system"}
+	return &FakePodDisruptionBudgets{c, namespace, ""}
 }
 
 func (c *FakePolicyV1beta1) PodDisruptionBudgetsWithMultiTenancy(namespace string, tenant string) v1beta1.PodDisruptionBudgetInterface {
@@ -46,7 +46,7 @@ func (c *FakePolicyV1beta1) PodDisruptionBudgetsWithMultiTenancy(namespace strin
 }
 
 func (c *FakePolicyV1beta1) PodSecurityPolicies() v1beta1.PodSecurityPolicyInterface {
-	return &FakePodSecurityPolicies{c, "system"}
+	return &FakePodSecurityPolicies{c, ""}
 }
 
 func (c *FakePolicyV1beta1) PodSecurityPoliciesWithMultiTenancy(tenant string) v1beta1.PodSecurityPolicyInterface {

@@ -45,7 +45,7 @@ type NetworkingV1beta1Client struct {
 }
 
 func (c *NetworkingV1beta1Client) Ingresses(namespace string) IngressInterface {
-	return newIngressesWithMultiTenancy(c, namespace, "system")
+	return newIngressesWithMultiTenancy(c, namespace, "")
 }
 
 func (c *NetworkingV1beta1Client) IngressesWithMultiTenancy(namespace string, tenant string) IngressInterface {

@@ -176,7 +176,7 @@ func TestPVCProtectionController(t *testing.T) {
 			name:       "StorageObjectInUseProtection Enabled, PVC without finalizer -> finalizer is added",
 			updatedPVC: pvc(),
 			expectedActions: []clienttesting.Action{
-				clienttesting.NewUpdateAction(pvcVer, defaultNS, withProtectionFinalizer(pvc())),
+				clienttesting.NewUpdateActionWithMultiTenancy(pvcVer, defaultNS, withProtectionFinalizer(pvc()), defaultTenant),
 			},
 			storageObjectInUseProtectionEnabled: true,
 		},
@@ -204,11 +204,11 @@ func TestPVCProtectionController(t *testing.T) {
 			},
 			expectedActions: []clienttesting.Action{
 				// This fails
-				clienttesting.NewUpdateAction(pvcVer, defaultNS, withProtectionFinalizer(pvc())),
+				clienttesting.NewUpdateActionWithMultiTenancy(pvcVer, defaultNS, withProtectionFinalizer(pvc()), defaultTenant),
 				// This fails too
-				clienttesting.NewUpdateAction(pvcVer, defaultNS, withProtectionFinalizer(pvc())),
+				clienttesting.NewUpdateActionWithMultiTenancy(pvcVer, defaultNS, withProtectionFinalizer(pvc()), defaultTenant),
 				// This succeeds
-				clienttesting.NewUpdateAction(pvcVer, defaultNS, withProtectionFinalizer(pvc())),
+				clienttesting.NewUpdateActionWithMultiTenancy(pvcVer, defaultNS, withProtectionFinalizer(pvc()), defaultTenant),
 			},
 			storageObjectInUseProtectionEnabled: true,
 		},
@@ -216,7 +216,7 @@ func TestPVCProtectionController(t *testing.T) {
 			name:       "StorageObjectInUseProtection Enabled, deleted PVC with finalizer -> finalizer is removed",
 			updatedPVC: deleted(withProtectionFinalizer(pvc())),
 			expectedActions: []clienttesting.Action{
-				clienttesting.NewUpdateAction(pvcVer, defaultNS, deleted(pvc())),
+				clienttesting.NewUpdateActionWithMultiTenancy(pvcVer, defaultNS, deleted(pvc()), defaultTenant),
 			},
 			storageObjectInUseProtectionEnabled: true,
 		},
@@ -224,7 +224,7 @@ func TestPVCProtectionController(t *testing.T) {
 			name:       "StorageObjectInUseProtection Disabled, deleted PVC with finalizer -> finalizer is removed",
 			updatedPVC: deleted(withProtectionFinalizer(pvc())),
 			expectedActions: []clienttesting.Action{
-				clienttesting.NewUpdateAction(pvcVer, defaultNS, deleted(pvc())),
+				clienttesting.NewUpdateActionWithMultiTenancy(pvcVer, defaultNS, deleted(pvc()), defaultTenant),
 			},
 			storageObjectInUseProtectionEnabled: false,
 		},
@@ -240,11 +240,11 @@ func TestPVCProtectionController(t *testing.T) {
 			},
 			expectedActions: []clienttesting.Action{
 				// Fails
-				clienttesting.NewUpdateAction(pvcVer, defaultNS, deleted(pvc())),
+				clienttesting.NewUpdateActionWithMultiTenancy(pvcVer, defaultNS, deleted(pvc()), defaultTenant),
 				// Fails too
-				clienttesting.NewUpdateAction(pvcVer, defaultNS, deleted(pvc())),
+				clienttesting.NewUpdateActionWithMultiTenancy(pvcVer, defaultNS, deleted(pvc()), defaultTenant),
 				// Succeeds
-				clienttesting.NewUpdateAction(pvcVer, defaultNS, deleted(pvc())),
+				clienttesting.NewUpdateActionWithMultiTenancy(pvcVer, defaultNS, deleted(pvc()), defaultTenant),
 			},
 			storageObjectInUseProtectionEnabled: true,
 		},
@@ -263,7 +263,7 @@ func TestPVCProtectionController(t *testing.T) {
 			},
 			updatedPVC: deleted(withProtectionFinalizer(pvc())),
 			expectedActions: []clienttesting.Action{
-				clienttesting.NewUpdateAction(pvcVer, defaultNS, deleted(pvc())),
+				clienttesting.NewUpdateActionWithMultiTenancy(pvcVer, defaultNS, deleted(pvc()), defaultTenant),
 			},
 			storageObjectInUseProtectionEnabled: true,
 		},
@@ -304,7 +304,7 @@ func TestPVCProtectionController(t *testing.T) {
 			},
 			updatedPod: unscheduled(withPVC(defaultPVCName, pod())),
 			expectedActions: []clienttesting.Action{
-				clienttesting.NewUpdateAction(pvcVer, defaultNS, deleted(pvc())),
+				clienttesting.NewUpdateActionWithMultiTenancy(pvcVer, defaultNS, deleted(pvc()), defaultTenant),
 			},
 			storageObjectInUseProtectionEnabled: true,
 		},
@@ -315,7 +315,7 @@ func TestPVCProtectionController(t *testing.T) {
 			},
 			deletedPod: withStatus(v1.PodRunning, withPVC(defaultPVCName, pod())),
 			expectedActions: []clienttesting.Action{
-				clienttesting.NewUpdateAction(pvcVer, defaultNS, deleted(pvc())),
+				clienttesting.NewUpdateActionWithMultiTenancy(pvcVer, defaultNS, deleted(pvc()), defaultTenant),
 			},
 			storageObjectInUseProtectionEnabled: true,
 		},

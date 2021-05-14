@@ -43,7 +43,7 @@ func NewSharedInformerFactoryWithMultitenancy(client metadata.Interface, tenant 
 // NewFilteredSharedInformerFactory constructs a new instance of metadataSharedInformerFactory.
 // Listers obtained via this factory will be subject to the same filters as specified here.
 func NewFilteredSharedInformerFactory(client metadata.Interface, defaultResync time.Duration, namespace string, tweakListOptions TweakListOptionsFunc) SharedInformerFactory {
-	return NewFilteredSharedInformerFactoryWithMultiTenancy(client, defaultResync, metav1.TenantSystem, namespace, tweakListOptions)
+	return NewFilteredSharedInformerFactoryWithMultiTenancy(client, defaultResync, metav1.TenantAll, namespace, tweakListOptions)
 }
 
 func NewFilteredSharedInformerFactoryWithMultiTenancy(client metadata.Interface, defaultResync time.Duration, tenant, namespace string, tweakListOptions TweakListOptionsFunc) SharedInformerFactory {
@@ -127,7 +127,7 @@ func (f *metadataSharedInformerFactory) WaitForCacheSync(stopCh <-chan struct{})
 
 // NewFilteredMetadataInformer constructs a new informer for a metadata type.
 func NewFilteredMetadataInformer(client metadata.Interface, gvr schema.GroupVersionResource, namespace string, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions TweakListOptionsFunc) informers.GenericInformer {
-	return NewFilteredMetadataInformerWithMultiTenancy(client, gvr, metav1.TenantSystem, namespace, resyncPeriod, indexers, tweakListOptions)
+	return NewFilteredMetadataInformerWithMultiTenancy(client, gvr, metav1.TenantAll, namespace, resyncPeriod, indexers, tweakListOptions)
 }
 
 // NewFilteredMetadataInformerWithMultiTenancy constructs a new informer for a metadata type.

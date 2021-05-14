@@ -65,7 +65,7 @@ type CoreV1Client struct {
 }
 
 func (c *CoreV1Client) Actions(namespace string) ActionInterface {
-	return newActionsWithMultiTenancy(c, namespace, "system")
+	return newActionsWithMultiTenancy(c, namespace, "")
 }
 
 func (c *CoreV1Client) ActionsWithMultiTenancy(namespace string, tenant string) ActionInterface {
@@ -77,7 +77,7 @@ func (c *CoreV1Client) ComponentStatuses() ComponentStatusInterface {
 }
 
 func (c *CoreV1Client) ConfigMaps(namespace string) ConfigMapInterface {
-	return newConfigMapsWithMultiTenancy(c, namespace, "system")
+	return newConfigMapsWithMultiTenancy(c, namespace, "")
 }
 
 func (c *CoreV1Client) ConfigMapsWithMultiTenancy(namespace string, tenant string) ConfigMapInterface {
@@ -93,7 +93,7 @@ func (c *CoreV1Client) DataPartitionConfigs() DataPartitionConfigInterface {
 }
 
 func (c *CoreV1Client) Endpoints(namespace string) EndpointsInterface {
-	return newEndpointsWithMultiTenancy(c, namespace, "system")
+	return newEndpointsWithMultiTenancy(c, namespace, "")
 }
 
 func (c *CoreV1Client) EndpointsWithMultiTenancy(namespace string, tenant string) EndpointsInterface {
@@ -101,7 +101,7 @@ func (c *CoreV1Client) EndpointsWithMultiTenancy(namespace string, tenant string
 }
 
 func (c *CoreV1Client) Events(namespace string) EventInterface {
-	return newEventsWithMultiTenancy(c, namespace, "system")
+	return newEventsWithMultiTenancy(c, namespace, "")
 }
 
 func (c *CoreV1Client) EventsWithMultiTenancy(namespace string, tenant string) EventInterface {
@@ -109,7 +109,7 @@ func (c *CoreV1Client) EventsWithMultiTenancy(namespace string, tenant string) E
 }
 
 func (c *CoreV1Client) LimitRanges(namespace string) LimitRangeInterface {
-	return newLimitRangesWithMultiTenancy(c, namespace, "system")
+	return newLimitRangesWithMultiTenancy(c, namespace, "")
 }
 
 func (c *CoreV1Client) LimitRangesWithMultiTenancy(namespace string, tenant string) LimitRangeInterface {
@@ -117,7 +117,7 @@ func (c *CoreV1Client) LimitRangesWithMultiTenancy(namespace string, tenant stri
 }
 
 func (c *CoreV1Client) Namespaces() NamespaceInterface {
-	return newNamespacesWithMultiTenancy(c, "system")
+	return newNamespacesWithMultiTenancy(c, "")
 }
 
 func (c *CoreV1Client) NamespacesWithMultiTenancy(tenant string) NamespaceInterface {
@@ -129,7 +129,7 @@ func (c *CoreV1Client) Nodes() NodeInterface {
 }
 
 func (c *CoreV1Client) PersistentVolumes() PersistentVolumeInterface {
-	return newPersistentVolumesWithMultiTenancy(c, "system")
+	return newPersistentVolumesWithMultiTenancy(c, "")
 }
 
 func (c *CoreV1Client) PersistentVolumesWithMultiTenancy(tenant string) PersistentVolumeInterface {
@@ -137,7 +137,7 @@ func (c *CoreV1Client) PersistentVolumesWithMultiTenancy(tenant string) Persiste
 }
 
 func (c *CoreV1Client) PersistentVolumeClaims(namespace string) PersistentVolumeClaimInterface {
-	return newPersistentVolumeClaimsWithMultiTenancy(c, namespace, "system")
+	return newPersistentVolumeClaimsWithMultiTenancy(c, namespace, "")
 }
 
 func (c *CoreV1Client) PersistentVolumeClaimsWithMultiTenancy(namespace string, tenant string) PersistentVolumeClaimInterface {
@@ -145,7 +145,7 @@ func (c *CoreV1Client) PersistentVolumeClaimsWithMultiTenancy(namespace string, 
 }
 
 func (c *CoreV1Client) Pods(namespace string) PodInterface {
-	return newPodsWithMultiTenancy(c, namespace, "system")
+	return newPodsWithMultiTenancy(c, namespace, "")
 }
 
 func (c *CoreV1Client) PodsWithMultiTenancy(namespace string, tenant string) PodInterface {
@@ -153,7 +153,7 @@ func (c *CoreV1Client) PodsWithMultiTenancy(namespace string, tenant string) Pod
 }
 
 func (c *CoreV1Client) PodTemplates(namespace string) PodTemplateInterface {
-	return newPodTemplatesWithMultiTenancy(c, namespace, "system")
+	return newPodTemplatesWithMultiTenancy(c, namespace, "")
 }
 
 func (c *CoreV1Client) PodTemplatesWithMultiTenancy(namespace string, tenant string) PodTemplateInterface {
@@ -161,7 +161,7 @@ func (c *CoreV1Client) PodTemplatesWithMultiTenancy(namespace string, tenant str
 }
 
 func (c *CoreV1Client) ReplicationControllers(namespace string) ReplicationControllerInterface {
-	return newReplicationControllersWithMultiTenancy(c, namespace, "system")
+	return newReplicationControllersWithMultiTenancy(c, namespace, "")
 }
 
 func (c *CoreV1Client) ReplicationControllersWithMultiTenancy(namespace string, tenant string) ReplicationControllerInterface {
@@ -169,7 +169,7 @@ func (c *CoreV1Client) ReplicationControllersWithMultiTenancy(namespace string, 
 }
 
 func (c *CoreV1Client) ResourceQuotas(namespace string) ResourceQuotaInterface {
-	return newResourceQuotasWithMultiTenancy(c, namespace, "system")
+	return newResourceQuotasWithMultiTenancy(c, namespace, "")
 }
 
 func (c *CoreV1Client) ResourceQuotasWithMultiTenancy(namespace string, tenant string) ResourceQuotaInterface {
@@ -177,7 +177,7 @@ func (c *CoreV1Client) ResourceQuotasWithMultiTenancy(namespace string, tenant s
 }
 
 func (c *CoreV1Client) Secrets(namespace string) SecretInterface {
-	return newSecretsWithMultiTenancy(c, namespace, "system")
+	return newSecretsWithMultiTenancy(c, namespace, "")
 }
 
 func (c *CoreV1Client) SecretsWithMultiTenancy(namespace string, tenant string) SecretInterface {
@@ -185,7 +185,7 @@ func (c *CoreV1Client) SecretsWithMultiTenancy(namespace string, tenant string) 
 }
 
 func (c *CoreV1Client) Services(namespace string) ServiceInterface {
-	return newServicesWithMultiTenancy(c, namespace, "system")
+	return newServicesWithMultiTenancy(c, namespace, "")
 }
 
 func (c *CoreV1Client) ServicesWithMultiTenancy(namespace string, tenant string) ServiceInterface {
@@ -193,7 +193,7 @@ func (c *CoreV1Client) ServicesWithMultiTenancy(namespace string, tenant string)
 }
 
 func (c *CoreV1Client) ServiceAccounts(namespace string) ServiceAccountInterface {
-	return newServiceAccountsWithMultiTenancy(c, namespace, "system")
+	return newServiceAccountsWithMultiTenancy(c, namespace, "")
 }
 
 func (c *CoreV1Client) ServiceAccountsWithMultiTenancy(namespace string, tenant string) ServiceAccountInterface {

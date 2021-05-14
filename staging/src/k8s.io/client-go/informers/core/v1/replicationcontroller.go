@@ -61,7 +61,7 @@ func NewReplicationControllerInformerWithMultiTenancy(client kubernetes.Interfac
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
 func NewFilteredReplicationControllerInformer(client kubernetes.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
-	return NewFilteredReplicationControllerInformerWithMultiTenancy(client, namespace, resyncPeriod, indexers, tweakListOptions, "system")
+	return NewFilteredReplicationControllerInformerWithMultiTenancy(client, namespace, resyncPeriod, indexers, tweakListOptions, "all")
 }
 
 func NewFilteredReplicationControllerInformerWithMultiTenancy(client kubernetes.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc, tenant string) cache.SharedIndexInformer {

@@ -45,7 +45,7 @@ type EventsV1beta1Client struct {
 }
 
 func (c *EventsV1beta1Client) Events(namespace string) EventInterface {
-	return newEventsWithMultiTenancy(c, namespace, "system")
+	return newEventsWithMultiTenancy(c, namespace, "")
 }
 
 func (c *EventsV1beta1Client) EventsWithMultiTenancy(namespace string, tenant string) EventInterface {

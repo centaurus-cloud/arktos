@@ -123,7 +123,7 @@ func TestPVProtectionController(t *testing.T) {
 			name:      "StorageObjectInUseProtection Enabled, PV without finalizer -> finalizer is added",
 			updatedPV: pv(),
 			expectedActions: []clienttesting.Action{
-				clienttesting.NewUpdateAction(pvVer, "", withProtectionFinalizer(pv())),
+				clienttesting.NewUpdateActionWithMultiTenancy(pvVer, "", withProtectionFinalizer(pv()), metav1.TenantSystem),
 			},
 			storageObjectInUseProtectionEnabled: true,
 		},
@@ -151,11 +151,11 @@ func TestPVProtectionController(t *testing.T) {
 			},
 			expectedActions: []clienttesting.Action{
 				// This fails
-				clienttesting.NewUpdateAction(pvVer, "", withProtectionFinalizer(pv())),
+				clienttesting.NewUpdateActionWithMultiTenancy(pvVer, "", withProtectionFinalizer(pv()), metav1.TenantSystem),
 				// This fails too
-				clienttesting.NewUpdateAction(pvVer, "", withProtectionFinalizer(pv())),
+				clienttesting.NewUpdateActionWithMultiTenancy(pvVer, "", withProtectionFinalizer(pv()), metav1.TenantSystem),
 				// This succeeds
-				clienttesting.NewUpdateAction(pvVer, "", withProtectionFinalizer(pv())),
+				clienttesting.NewUpdateActionWithMultiTenancy(pvVer, "", withProtectionFinalizer(pv()), metav1.TenantSystem),
 			},
 			storageObjectInUseProtectionEnabled: true,
 		},
@@ -163,7 +163,7 @@ func TestPVProtectionController(t *testing.T) {
 			name:      "StorageObjectInUseProtection Enabled, deleted PV with finalizer -> finalizer is removed",
 			updatedPV: deleted(withProtectionFinalizer(pv())),
 			expectedActions: []clienttesting.Action{
-				clienttesting.NewUpdateAction(pvVer, "", deleted(pv())),
+				clienttesting.NewUpdateActionWithMultiTenancy(pvVer, "", deleted(pv()), metav1.TenantSystem),
 			},
 			storageObjectInUseProtectionEnabled: true,
 		},
@@ -171,7 +171,7 @@ func TestPVProtectionController(t *testing.T) {
 			name:      "StorageObjectInUseProtection Disabled, deleted PV with finalizer -> finalizer is removed",
 			updatedPV: deleted(withProtectionFinalizer(pv())),
 			expectedActions: []clienttesting.Action{
-				clienttesting.NewUpdateAction(pvVer, "", deleted(pv())),
+				clienttesting.NewUpdateActionWithMultiTenancy(pvVer, "", deleted(pv()), metav1.TenantSystem),
 			},
 			storageObjectInUseProtectionEnabled: false,
 		},
@@ -187,11 +187,11 @@ func TestPVProtectionController(t *testing.T) {
 			},
 			expectedActions: []clienttesting.Action{
 				// Fails
-				clienttesting.NewUpdateAction(pvVer, "", deleted(pv())),
+				clienttesting.NewUpdateActionWithMultiTenancy(pvVer, "", deleted(pv()), metav1.TenantSystem),
 				// Fails too
-				clienttesting.NewUpdateAction(pvVer, "", deleted(pv())),
+				clienttesting.NewUpdateActionWithMultiTenancy(pvVer, "", deleted(pv()), metav1.TenantSystem),
 				// Succeeds
-				clienttesting.NewUpdateAction(pvVer, "", deleted(pv())),
+				clienttesting.NewUpdateActionWithMultiTenancy(pvVer, "", deleted(pv()), metav1.TenantSystem),
 			},
 			storageObjectInUseProtectionEnabled: true,
 		},

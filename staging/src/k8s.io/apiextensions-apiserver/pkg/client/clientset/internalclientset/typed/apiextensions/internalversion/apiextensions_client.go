@@ -44,7 +44,7 @@ type ApiextensionsClient struct {
 }
 
 func (c *ApiextensionsClient) CustomResourceDefinitions() CustomResourceDefinitionInterface {
-	return newCustomResourceDefinitionsWithMultiTenancy(c, "system")
+	return newCustomResourceDefinitionsWithMultiTenancy(c, "")
 }
 
 func (c *ApiextensionsClient) CustomResourceDefinitionsWithMultiTenancy(tenant string) CustomResourceDefinitionInterface {

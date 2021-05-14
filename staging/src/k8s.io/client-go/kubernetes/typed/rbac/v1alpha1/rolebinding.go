@@ -66,7 +66,7 @@ type roleBindings struct {
 
 // newRoleBindings returns a RoleBindings
 func newRoleBindings(c *RbacV1alpha1Client, namespace string) *roleBindings {
-	return newRoleBindingsWithMultiTenancy(c, namespace, "system")
+	return newRoleBindingsWithMultiTenancy(c, namespace, "")
 }
 
 func newRoleBindingsWithMultiTenancy(c *RbacV1alpha1Client, namespace string, tenant string) *roleBindings {

@@ -48,7 +48,7 @@ type AuthorizationV1Client struct {
 }
 
 func (c *AuthorizationV1Client) LocalSubjectAccessReviews(namespace string) LocalSubjectAccessReviewInterface {
-	return newLocalSubjectAccessReviewsWithMultiTenancy(c, namespace, "system")
+	return newLocalSubjectAccessReviewsWithMultiTenancy(c, namespace, "")
 }
 
 func (c *AuthorizationV1Client) LocalSubjectAccessReviewsWithMultiTenancy(namespace string, tenant string) LocalSubjectAccessReviewInterface {
@@ -56,7 +56,7 @@ func (c *AuthorizationV1Client) LocalSubjectAccessReviewsWithMultiTenancy(namesp
 }
 
 func (c *AuthorizationV1Client) SelfSubjectAccessReviews() SelfSubjectAccessReviewInterface {
-	return newSelfSubjectAccessReviewsWithMultiTenancy(c, "system")
+	return newSelfSubjectAccessReviewsWithMultiTenancy(c, "")
 }
 
 func (c *AuthorizationV1Client) SelfSubjectAccessReviewsWithMultiTenancy(tenant string) SelfSubjectAccessReviewInterface {
@@ -64,7 +64,7 @@ func (c *AuthorizationV1Client) SelfSubjectAccessReviewsWithMultiTenancy(tenant 
 }
 
 func (c *AuthorizationV1Client) SelfSubjectRulesReviews() SelfSubjectRulesReviewInterface {
-	return newSelfSubjectRulesReviewsWithMultiTenancy(c, "system")
+	return newSelfSubjectRulesReviewsWithMultiTenancy(c, "")
 }
 
 func (c *AuthorizationV1Client) SelfSubjectRulesReviewsWithMultiTenancy(tenant string) SelfSubjectRulesReviewInterface {
@@ -72,7 +72,7 @@ func (c *AuthorizationV1Client) SelfSubjectRulesReviewsWithMultiTenancy(tenant s
 }
 
 func (c *AuthorizationV1Client) SubjectAccessReviews() SubjectAccessReviewInterface {
-	return newSubjectAccessReviewsWithMultiTenancy(c, "system")
+	return newSubjectAccessReviewsWithMultiTenancy(c, "")
 }
 
 func (c *AuthorizationV1Client) SubjectAccessReviewsWithMultiTenancy(tenant string) SubjectAccessReviewInterface {

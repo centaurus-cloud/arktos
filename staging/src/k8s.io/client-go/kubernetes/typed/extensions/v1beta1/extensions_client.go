@@ -50,7 +50,7 @@ type ExtensionsV1beta1Client struct {
 }
 
 func (c *ExtensionsV1beta1Client) DaemonSets(namespace string) DaemonSetInterface {
-	return newDaemonSetsWithMultiTenancy(c, namespace, "system")
+	return newDaemonSetsWithMultiTenancy(c, namespace, "")
 }
 
 func (c *ExtensionsV1beta1Client) DaemonSetsWithMultiTenancy(namespace string, tenant string) DaemonSetInterface {
@@ -58,7 +58,7 @@ func (c *ExtensionsV1beta1Client) DaemonSetsWithMultiTenancy(namespace string, t
 }
 
 func (c *ExtensionsV1beta1Client) Deployments(namespace string) DeploymentInterface {
-	return newDeploymentsWithMultiTenancy(c, namespace, "system")
+	return newDeploymentsWithMultiTenancy(c, namespace, "")
 }
 
 func (c *ExtensionsV1beta1Client) DeploymentsWithMultiTenancy(namespace string, tenant string) DeploymentInterface {
@@ -66,7 +66,7 @@ func (c *ExtensionsV1beta1Client) DeploymentsWithMultiTenancy(namespace string, 
 }
 
 func (c *ExtensionsV1beta1Client) Ingresses(namespace string) IngressInterface {
-	return newIngressesWithMultiTenancy(c, namespace, "system")
+	return newIngressesWithMultiTenancy(c, namespace, "")
 }
 
 func (c *ExtensionsV1beta1Client) IngressesWithMultiTenancy(namespace string, tenant string) IngressInterface {
@@ -74,7 +74,7 @@ func (c *ExtensionsV1beta1Client) IngressesWithMultiTenancy(namespace string, te
 }
 
 func (c *ExtensionsV1beta1Client) NetworkPolicies(namespace string) NetworkPolicyInterface {
-	return newNetworkPoliciesWithMultiTenancy(c, namespace, "system")
+	return newNetworkPoliciesWithMultiTenancy(c, namespace, "")
 }
 
 func (c *ExtensionsV1beta1Client) NetworkPoliciesWithMultiTenancy(namespace string, tenant string) NetworkPolicyInterface {
@@ -82,7 +82,7 @@ func (c *ExtensionsV1beta1Client) NetworkPoliciesWithMultiTenancy(namespace stri
 }
 
 func (c *ExtensionsV1beta1Client) PodSecurityPolicies() PodSecurityPolicyInterface {
-	return newPodSecurityPoliciesWithMultiTenancy(c, "system")
+	return newPodSecurityPoliciesWithMultiTenancy(c, "")
 }
 
 func (c *ExtensionsV1beta1Client) PodSecurityPoliciesWithMultiTenancy(tenant string) PodSecurityPolicyInterface {
@@ -90,7 +90,7 @@ func (c *ExtensionsV1beta1Client) PodSecurityPoliciesWithMultiTenancy(tenant str
 }
 
 func (c *ExtensionsV1beta1Client) ReplicaSets(namespace string) ReplicaSetInterface {
-	return newReplicaSetsWithMultiTenancy(c, namespace, "system")
+	return newReplicaSetsWithMultiTenancy(c, namespace, "")
 }
 
 func (c *ExtensionsV1beta1Client) ReplicaSetsWithMultiTenancy(namespace string, tenant string) ReplicaSetInterface {

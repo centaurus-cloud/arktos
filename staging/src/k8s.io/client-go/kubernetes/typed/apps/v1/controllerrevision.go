@@ -66,7 +66,7 @@ type controllerRevisions struct {
 
 // newControllerRevisions returns a ControllerRevisions
 func newControllerRevisions(c *AppsV1Client, namespace string) *controllerRevisions {
-	return newControllerRevisionsWithMultiTenancy(c, namespace, "system")
+	return newControllerRevisionsWithMultiTenancy(c, namespace, "")
 }
 
 func newControllerRevisionsWithMultiTenancy(c *AppsV1Client, namespace string, tenant string) *controllerRevisions {

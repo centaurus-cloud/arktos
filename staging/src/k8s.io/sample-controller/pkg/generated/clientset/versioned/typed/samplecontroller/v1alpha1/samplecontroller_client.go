@@ -45,7 +45,7 @@ type SamplecontrollerV1alpha1Client struct {
 }
 
 func (c *SamplecontrollerV1alpha1Client) Foos(namespace string) FooInterface {
-	return newFoosWithMultiTenancy(c, namespace, "system")
+	return newFoosWithMultiTenancy(c, namespace, "")
 }
 
 func (c *SamplecontrollerV1alpha1Client) FoosWithMultiTenancy(namespace string, tenant string) FooInterface {

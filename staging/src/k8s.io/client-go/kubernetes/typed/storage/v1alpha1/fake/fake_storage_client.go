@@ -30,7 +30,7 @@ type FakeStorageV1alpha1 struct {
 }
 
 func (c *FakeStorageV1alpha1) VolumeAttachments() v1alpha1.VolumeAttachmentInterface {
-	return &FakeVolumeAttachments{c, "system"}
+	return &FakeVolumeAttachments{c, ""}
 }
 
 func (c *FakeStorageV1alpha1) VolumeAttachmentsWithMultiTenancy(tenant string) v1alpha1.VolumeAttachmentInterface {

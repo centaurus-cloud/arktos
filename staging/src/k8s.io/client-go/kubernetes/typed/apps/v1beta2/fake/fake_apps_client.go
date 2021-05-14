@@ -30,7 +30,7 @@ type FakeAppsV1beta2 struct {
 }
 
 func (c *FakeAppsV1beta2) ControllerRevisions(namespace string) v1beta2.ControllerRevisionInterface {
-	return &FakeControllerRevisions{c, namespace, "system"}
+	return &FakeControllerRevisions{c, namespace, ""}
 }
 
 func (c *FakeAppsV1beta2) ControllerRevisionsWithMultiTenancy(namespace string, tenant string) v1beta2.ControllerRevisionInterface {
@@ -38,7 +38,7 @@ func (c *FakeAppsV1beta2) ControllerRevisionsWithMultiTenancy(namespace string, 
 }
 
 func (c *FakeAppsV1beta2) DaemonSets(namespace string) v1beta2.DaemonSetInterface {
-	return &FakeDaemonSets{c, namespace, "system"}
+	return &FakeDaemonSets{c, namespace, ""}
 }
 
 func (c *FakeAppsV1beta2) DaemonSetsWithMultiTenancy(namespace string, tenant string) v1beta2.DaemonSetInterface {
@@ -46,7 +46,7 @@ func (c *FakeAppsV1beta2) DaemonSetsWithMultiTenancy(namespace string, tenant st
 }
 
 func (c *FakeAppsV1beta2) Deployments(namespace string) v1beta2.DeploymentInterface {
-	return &FakeDeployments{c, namespace, "system"}
+	return &FakeDeployments{c, namespace, ""}
 }
 
 func (c *FakeAppsV1beta2) DeploymentsWithMultiTenancy(namespace string, tenant string) v1beta2.DeploymentInterface {
@@ -54,7 +54,7 @@ func (c *FakeAppsV1beta2) DeploymentsWithMultiTenancy(namespace string, tenant s
 }
 
 func (c *FakeAppsV1beta2) ReplicaSets(namespace string) v1beta2.ReplicaSetInterface {
-	return &FakeReplicaSets{c, namespace, "system"}
+	return &FakeReplicaSets{c, namespace, ""}
 }
 
 func (c *FakeAppsV1beta2) ReplicaSetsWithMultiTenancy(namespace string, tenant string) v1beta2.ReplicaSetInterface {
@@ -62,7 +62,7 @@ func (c *FakeAppsV1beta2) ReplicaSetsWithMultiTenancy(namespace string, tenant s
 }
 
 func (c *FakeAppsV1beta2) StatefulSets(namespace string) v1beta2.StatefulSetInterface {
-	return &FakeStatefulSets{c, namespace, "system"}
+	return &FakeStatefulSets{c, namespace, ""}
 }
 
 func (c *FakeAppsV1beta2) StatefulSetsWithMultiTenancy(namespace string, tenant string) v1beta2.StatefulSetInterface {

@@ -35,7 +35,7 @@ func (c *FakeMetricsV1beta1) NodeMetricses() v1beta1.NodeMetricsInterface {
 }
 
 func (c *FakeMetricsV1beta1) PodMetricses(namespace string) v1beta1.PodMetricsInterface {
-	return &FakePodMetricses{c, namespace, "system"}
+	return &FakePodMetricses{c, namespace, ""}
 }
 
 func (c *FakeMetricsV1beta1) PodMetricsesWithMultiTenancy(namespace string, tenant string) v1beta1.PodMetricsInterface {

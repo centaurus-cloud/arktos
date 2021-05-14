@@ -67,7 +67,7 @@ type deployments struct {
 
 // newDeployments returns a Deployments
 func newDeployments(c *AppsV1beta2Client, namespace string) *deployments {
-	return newDeploymentsWithMultiTenancy(c, namespace, "system")
+	return newDeploymentsWithMultiTenancy(c, namespace, "")
 }
 
 func newDeploymentsWithMultiTenancy(c *AppsV1beta2Client, namespace string, tenant string) *deployments {

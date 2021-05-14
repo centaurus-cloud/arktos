@@ -115,11 +115,11 @@ func TestTenantInfoRequest(t *testing.T) {
 			ExpectedTenant:   "another-user",
 		},
 		{
-			Name:             "Regular User: metav1.TenantAll will be transformed to metav1.TenantAll",
+			Name:             "Regular User: metav1.TenantAll will be transformed to regular-user",
 			Url:              fmt.Sprintf("/api/v1/tenants/%s/namespaces", metav1.TenantAll),
 			UserInfo:         getTenantedUserInfo("regular-user"),
 			ExepctedRespCode: 200,
-			ExpectedTenant:   metav1.TenantAll,
+			ExpectedTenant:   "regular-user",
 		},
 		{
 			Name:             "System User: metav1.TenantAll will be transformed to metav1.TenantAll",

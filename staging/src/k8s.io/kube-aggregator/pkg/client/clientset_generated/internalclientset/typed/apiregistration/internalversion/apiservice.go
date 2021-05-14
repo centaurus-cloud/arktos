@@ -66,7 +66,7 @@ type aPIServices struct {
 
 // newAPIServices returns a APIServices
 func newAPIServices(c *ApiregistrationClient) *aPIServices {
-	return newAPIServicesWithMultiTenancy(c, "system")
+	return newAPIServicesWithMultiTenancy(c, "")
 }
 
 func newAPIServicesWithMultiTenancy(c *ApiregistrationClient, tenant string) *aPIServices {

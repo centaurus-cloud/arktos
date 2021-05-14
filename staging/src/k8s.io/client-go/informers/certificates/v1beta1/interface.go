@@ -38,7 +38,7 @@ type version struct {
 
 // New returns a new Interface.
 func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakListOptions internalinterfaces.TweakListOptionsFunc) Interface {
-	return &version{factory: f, tenant: "system", namespace: namespace, tweakListOptions: tweakListOptions}
+	return &version{factory: f, tenant: "all", namespace: namespace, tweakListOptions: tweakListOptions}
 }
 
 func NewWithMultiTenancy(f internalinterfaces.SharedInformerFactory, namespace string, tweakListOptions internalinterfaces.TweakListOptionsFunc, tenant string) Interface {

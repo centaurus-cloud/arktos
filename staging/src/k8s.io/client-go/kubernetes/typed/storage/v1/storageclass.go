@@ -65,7 +65,7 @@ type storageClasses struct {
 
 // newStorageClasses returns a StorageClasses
 func newStorageClasses(c *StorageV1Client) *storageClasses {
-	return newStorageClassesWithMultiTenancy(c, "system")
+	return newStorageClassesWithMultiTenancy(c, "")
 }
 
 func newStorageClassesWithMultiTenancy(c *StorageV1Client, tenant string) *storageClasses {

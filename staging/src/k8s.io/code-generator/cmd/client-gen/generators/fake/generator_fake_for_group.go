@@ -93,7 +93,7 @@ func (g *genFakeForGroup) GenerateType(c *generator.Context, t *types.Type, w io
 			"GroupGoName":       g.groupGoName,
 			"Version":           namer.IC(g.version),
 			"realClientPackage": strings.ToLower(filepath.Base(g.realClientPackage)),
-			"DefaultTenant":     metav1.TenantSystem,
+			"DefaultTenant":     metav1.TenantNone,
 		}
 
 		switch {

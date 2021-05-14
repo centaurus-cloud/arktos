@@ -275,7 +275,7 @@ func (s *csrSimulator) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	}
 
 	switch {
-	case req.Method == "POST" && req.URL.Path == "/apis/certificates.k8s.io/v1beta1/tenants/system/certificatesigningrequests":
+	case req.Method == "POST" && req.URL.Path == "/apis/certificates.k8s.io/v1beta1/certificatesigningrequests":
 		csr, err := getCSR(req)
 		if err != nil {
 			t.Fatal(err)
@@ -319,7 +319,7 @@ func (s *csrSimulator) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		}
 		s.csr = csr
 
-	case req.Method == "GET" && req.URL.Path == "/apis/certificates.k8s.io/v1beta1/tenants/system/certificatesigningrequests" && req.URL.RawQuery == "fieldSelector=metadata.name%3Dtest-csr&limit=500&resourceVersion=0":
+	case req.Method == "GET" && req.URL.Path == "/apis/certificates.k8s.io/v1beta1/certificatesigningrequests" && req.URL.RawQuery == "fieldSelector=metadata.name%3Dtest-csr&limit=500&resourceVersion=0":
 		if s.csr == nil {
 			t.Fatalf("no csr")
 		}
@@ -336,7 +336,7 @@ func (s *csrSimulator) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.Write(data)
 
-	case req.Method == "GET" && req.URL.Path == "/apis/certificates.k8s.io/v1beta1/tenants/system/certificatesigningrequests" && req.URL.RawQuery == "fieldSelector=metadata.name%3Dtest-csr&resourceVersion=2&watch=true":
+	case req.Method == "GET" && req.URL.Path == "/apis/certificates.k8s.io/v1beta1/certificatesigningrequests" && req.URL.RawQuery == "fieldSelector=metadata.name%3Dtest-csr&resourceVersion=2&watch=true":
 		if s.csr == nil {
 			t.Fatalf("no csr")
 		}

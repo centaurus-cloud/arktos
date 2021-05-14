@@ -45,7 +45,7 @@ type ApiregistrationV1beta1Client struct {
 }
 
 func (c *ApiregistrationV1beta1Client) APIServices() APIServiceInterface {
-	return newAPIServicesWithMultiTenancy(c, "system")
+	return newAPIServicesWithMultiTenancy(c, "")
 }
 
 func (c *ApiregistrationV1beta1Client) APIServicesWithMultiTenancy(tenant string) APIServiceInterface {

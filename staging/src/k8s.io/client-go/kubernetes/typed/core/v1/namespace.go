@@ -65,7 +65,7 @@ type namespaces struct {
 
 // newNamespaces returns a Namespaces
 func newNamespaces(c *CoreV1Client) *namespaces {
-	return newNamespacesWithMultiTenancy(c, "system")
+	return newNamespacesWithMultiTenancy(c, "")
 }
 
 func newNamespacesWithMultiTenancy(c *CoreV1Client, tenant string) *namespaces {

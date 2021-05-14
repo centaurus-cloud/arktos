@@ -65,7 +65,7 @@ type clusterRoleBindings struct {
 
 // newClusterRoleBindings returns a ClusterRoleBindings
 func newClusterRoleBindings(c *RbacV1Client) *clusterRoleBindings {
-	return newClusterRoleBindingsWithMultiTenancy(c, "system")
+	return newClusterRoleBindingsWithMultiTenancy(c, "")
 }
 
 func newClusterRoleBindingsWithMultiTenancy(c *RbacV1Client, tenant string) *clusterRoleBindings {

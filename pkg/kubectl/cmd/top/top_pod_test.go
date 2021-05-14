@@ -451,7 +451,7 @@ func (d *fakeDiscovery) RESTClients() []restclient.Interface {
 }
 
 func TestTopPodCustomDefaults(t *testing.T) {
-	customBaseHeapsterServiceAddress := "/api/v1/tenants/system/namespaces/custom-namespace/services/https:custom-heapster-service:/proxy"
+	customBaseHeapsterServiceAddress := "/api/v1/namespaces/custom-namespace/services/https:custom-heapster-service:/proxy"
 	customBaseMetricsAddress := customBaseHeapsterServiceAddress + "/apis/metrics"
 	customTopPathPrefix := customBaseMetricsAddress + "/" + metricsAPIVersion
 

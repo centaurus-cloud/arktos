@@ -169,7 +169,7 @@ func TestCleanerWithApprovedExpiredCSR(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			csr := &capi.CertificateSigningRequest{
 				ObjectMeta: metav1.ObjectMeta{
-					Tenant:            metav1.TenantSystem,
+					Tenant:            metav1.TenantNone,
 					Name:              "fake-csr",
 					CreationTimestamp: tc.created,
 				},
