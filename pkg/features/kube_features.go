@@ -596,7 +596,7 @@ var defaultKubernetesFeatureGates = map[featuregate.Feature]featuregate.FeatureS
 	LocalStorageCapacityIsolationFSQuotaMonitoring: {Default: false, PreRelease: featuregate.Alpha},
 	NonPreemptingPriority:                          {Default: false, PreRelease: featuregate.Alpha},
 	VolumePVCDataSource:                            {Default: false, PreRelease: featuregate.Alpha},
-	InPlacePodVerticalScaling:                      {Default: false, PreRelease: featuregate.Alpha},
+	InPlacePodVerticalScaling:                      {Default: true, PreRelease: featuregate.Beta},
 	PerNetworkServiceIPAlloc:                       {Default: false, PreRelease: featuregate.Alpha},
 	MandatoryArktosNetwork:                         {Default: false, PreRelease: featuregate.Alpha},
 	WorkloadInfoDefaulting:                         {Default: false, PreRelease: featuregate.Alpha},

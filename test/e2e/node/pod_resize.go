@@ -66,11 +66,10 @@ type TestContainerInfo struct {
 	MemPolicy   *v1.ContainerResizePolicy
 }
 
-func makeTestContainer(tcInfo TestContainerInfo) v1.Container {
+func getTestResourceInfo(tcInfo TestContainerInfo) (v1.ResourceRequirements, v1.ResourceList, []v1.ResizePolicy) {
 	var res v1.ResourceRequirements
 	var alloc v1.ResourceList
 	var resizePol []v1.ResizePolicy
-	cmd := "trap exit TERM; while true; do sleep 1; done"
 
 	if tcInfo.Resources != nil {
 		var lim, req v1.ResourceList
@@ -121,7 +120,12 @@ func makeTestContainer(tcInfo TestContainerInfo) v1.Container {
 		memPol := v1.ResizePolicy{ResourceName: v1.ResourceMemory, Policy: *tcInfo.MemPolicy}
 		resizePol = append(resizePol, memPol)
 	}
+	return res, alloc, resizePol
+}
 
+func makeTestContainer(tcInfo TestContainerInfo) v1.Container {
+	cmd := "trap exit TERM; while true; do sleep 1; done"
+	res, alloc, resizePol := getTestResourceInfo(tcInfo)
 	tc := v1.Container{
 		Name:               tcInfo.Name,
 		Image:              imageutils.GetE2EImage(imageutils.BusyBox),
@@ -161,39 +165,75 @@ func makeTestPod(ns, name, timeStamp string, tcInfo []TestContainerInfo) *v1.Pod
 	return pod
 }
 
+func makeTestVM(tcInfo TestContainerInfo) v1.VirtualMachine {
+	res, alloc, resizePol := getTestResourceInfo(tcInfo)
+	tvm := v1.VirtualMachine{
+		Name:               tcInfo.Name,
+		KeyPairName:        "foobar",
+		Image:              "download.cirros-cloud.net/0.3.5/cirros-0.3.5-x86_64-disk.img",
+		Resources:          res,
+		ResourcesAllocated: alloc,
+		ResizePolicy:       resizePol,
+	}
+	return tvm
+}
+
+func makeTestVMPod(ns, name, timeStamp string, tcInfo []TestContainerInfo) *v1.Pod {
+	tvm := makeTestVM(tcInfo[0])
+	pod := &v1.Pod{
+		TypeMeta: metav1.TypeMeta{
+			Kind:       "Pod",
+			APIVersion: "v1",
+		},
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      name,
+			Namespace: ns,
+			Labels: map[string]string{
+				"name": "fooPod",
+				"time": timeStamp,
+			},
+		},
+		Spec: v1.PodSpec{
+			VirtualMachine: &tvm,
+			RestartPolicy:  v1.RestartPolicyOnFailure,
+		},
+	}
+	return pod
+}
+
 func verifyPodResizePolicy(pod *v1.Pod, tcInfo []TestContainerInfo) {
-	cMap := make(map[string]*v1.Container)
-	for i, c := range pod.Spec.Containers {
-		cMap[c.Name] = &pod.Spec.Containers[i]
+	wMap := make(map[string]*v1.CommonInfo)
+	for i, w := range pod.Spec.Workloads() {
+		wMap[w.Name] = &pod.Spec.WorkloadInfo[i]
 	}
 	for _, ci := range tcInfo {
-		c, found := cMap[ci.Name]
+		w, found := wMap[ci.Name]
 		gomega.Expect(found == true)
 		tc := makeTestContainer(ci)
-		framework.ExpectEqual(c.ResizePolicy, tc.ResizePolicy)
+		framework.ExpectEqual(w.ResizePolicy, tc.ResizePolicy)
 	}
 }
 
 func verifyPodResources(pod *v1.Pod, tcInfo []TestContainerInfo) {
-	cMap := make(map[string]*v1.Container)
-	for i, c := range pod.Spec.Containers {
-		cMap[c.Name] = &pod.Spec.Containers[i]
+	wMap := make(map[string]*v1.CommonInfo)
+	for i, w := range pod.Spec.Workloads() {
+		wMap[w.Name] = &pod.Spec.WorkloadInfo[i]
 	}
 	for _, ci := range tcInfo {
-		c, found := cMap[ci.Name]
+		w, found := wMap[ci.Name]
 		gomega.Expect(found == true)
 		tc := makeTestContainer(ci)
-		framework.ExpectEqual(c.Resources, tc.Resources)
+		framework.ExpectEqual(w.Resources, tc.Resources)
 	}
 }
 
 func verifyPodAllocations(pod *v1.Pod, tcInfo []TestContainerInfo) {
-	cMap := make(map[string]*v1.Container)
-	for i, c := range pod.Spec.Containers {
-		cMap[c.Name] = &pod.Spec.Containers[i]
+	wMap := make(map[string]*v1.CommonInfo)
+	for i, w := range pod.Spec.Workloads() {
+		wMap[w.Name] = &pod.Spec.WorkloadInfo[i]
 	}
 	for _, ci := range tcInfo {
-		c, found := cMap[ci.Name]
+		w, found := wMap[ci.Name]
 		gomega.Expect(found == true)
 		if ci.Allocations == nil {
 			alloc := &ContainerAllocations{CPUAlloc: ci.Resources.CPUReq, MemAlloc: ci.Resources.MemReq}
@@ -203,24 +243,34 @@ func verifyPodAllocations(pod *v1.Pod, tcInfo []TestContainerInfo) {
 			}()
 		}
 		tc := makeTestContainer(ci)
-		framework.ExpectEqual(c.ResourcesAllocated, tc.ResourcesAllocated)
+		framework.ExpectEqual(w.ResourcesAllocated, tc.ResourcesAllocated)
 	}
 }
 
 func verifyPodStatusResources(pod *v1.Pod, tcInfo []TestContainerInfo) {
-	csMap := make(map[string]*v1.ContainerStatus)
-	for i, c := range pod.Status.ContainerStatuses {
-		csMap[c.Name] = &pod.Status.ContainerStatuses[i]
-	}
-	for _, ci := range tcInfo {
-		cs, found := csMap[ci.Name]
-		gomega.Expect(found == true)
-		tc := makeTestContainer(ci)
-		framework.ExpectEqual(cs.Resources, tc.Resources)
+	if pod.Spec.VirtualMachine == nil {
+		csMap := make(map[string]*v1.ContainerStatus)
+		for i, c := range pod.Status.ContainerStatuses {
+			csMap[c.Name] = &pod.Status.ContainerStatuses[i]
+		}
+		for _, ci := range tcInfo {
+			cs, found := csMap[ci.Name]
+			gomega.Expect(found == true)
+			tc := makeTestContainer(ci)
+			framework.ExpectEqual(cs.Resources, tc.Resources)
+		}
+	} else {
+		gomega.Expect(pod.Status.VirtualMachineStatus != nil)
+		tc := makeTestContainer(tcInfo[0])
+		framework.ExpectEqual(pod.Status.VirtualMachineStatus.Resources, tc.Resources)
 	}
 }
 
 func verifyPodContainersCgroupConfig(pod *v1.Pod, tcInfo []TestContainerInfo) {
+	if pod.Spec.VirtualMachine != nil {
+		//TODO: Fix kubectl exec so that it works for VMs, and then remove this return
+		return
+	}
 	verifyCgroupValue := func(cName, cgPath, expectedCgValue string) {
 		cmd := []string{"head", "-n", "1", cgPath}
 		cgValue, err := framework.LookForStringInPodExecToContainer(pod.Namespace, pod.Name, cName, cmd, expectedCgValue, PollTimeout)
@@ -256,7 +306,7 @@ func verifyPodContainersCgroupConfig(pod *v1.Pod, tcInfo []TestContainerInfo) {
 	}
 }
 
-var _ = ginkgo.Describe("[sig-node] PodInPlaceResize", func() {
+func doPodResizeTest(vmPod bool) {
 	f := framework.NewDefaultFramework("pod-resize")
 	var podClient *framework.PodClient
 	var ns string
@@ -785,7 +835,13 @@ var _ = ginkgo.Describe("[sig-node] PodInPlaceResize", func() {
 
 	for idx := range tests {
 		tc := tests[idx]
+		if vmPod && len(tc.containers) > 1 {
+			// Multiple VMs per pod is not supported
+			continue
+		}
 		ginkgo.It(tc.name, func() {
+			var tPod, pPod *v1.Pod
+			var pErr error
 			setDefaultPolicy := func(ci *TestContainerInfo) {
 				if ci.CPUPolicy == nil {
 					ci.CPUPolicy = &noRestart
@@ -802,7 +858,11 @@ var _ = ginkgo.Describe("[sig-node] PodInPlaceResize", func() {
 			}
 
 			tStamp := strconv.Itoa(time.Now().Nanosecond())
-			tPod := makeTestPod(ns, "testpod", tStamp, tc.containers)
+			if vmPod {
+				tPod = makeTestVMPod(ns, "testpod", tStamp, tc.containers)
+			} else {
+				tPod = makeTestPod(ns, "testpod", tStamp, tc.containers)
+			}
 
 			ginkgo.By("creating pod")
 			pod := podClient.CreateSync(tPod)
@@ -824,9 +884,18 @@ var _ = ginkgo.Describe("[sig-node] PodInPlaceResize", func() {
 			verifyPodContainersCgroupConfig(pod, tc.containers)
 
 			ginkgo.By("patching pod for resize")
-			pPod, pErr := f.ClientSet.CoreV1().Pods(pod.Namespace).Patch(pod.Name,
-				types.StrategicMergePatchType, []byte(tc.patchString))
-			framework.ExpectNoError(pErr, "failed to patch pod for resize")
+			if vmPod {
+				vmPatchString := strings.Replace(tc.patchString, "containers", "virtualMachine", 1)
+				vmPatchString = strings.Replace(vmPatchString, "[", "", 1)
+				vmPatchString = strings.Replace(vmPatchString, "]", "", 1)
+				pPod, pErr = f.ClientSet.CoreV1().Pods(pod.Namespace).Patch(pod.Name,
+					types.StrategicMergePatchType, []byte(vmPatchString))
+				framework.ExpectNoError(pErr, "failed to patch pod for resize")
+			} else {
+				pPod, pErr = f.ClientSet.CoreV1().Pods(pod.Namespace).Patch(pod.Name,
+					types.StrategicMergePatchType, []byte(tc.patchString))
+				framework.ExpectNoError(pErr, "failed to patch pod for resize")
+			}
 
 			ginkgo.By("verifying pod patched for resize")
 			verifyPodResources(pPod, tc.expected)
@@ -843,8 +912,14 @@ var _ = ginkgo.Describe("[sig-node] PodInPlaceResize", func() {
 						return nil, err
 					}
 					differs := false
-					for idx, c := range pod.Spec.Containers {
-						if diff.ObjectDiff(c.Resources, pod.Status.ContainerStatuses[idx].Resources) != "" {
+					for idx, w := range pod.Spec.Workloads() {
+						var statusResources v1.ResourceRequirements
+						if pod.Spec.VirtualMachine != nil {
+							statusResources = pod.Status.VirtualMachineStatus.Resources
+						} else {
+							statusResources = pod.Status.ContainerStatuses[idx].Resources
+						}
+						if diff.ObjectDiff(w.Resources, statusResources) != "" {
 							differs = true
 							break
 						}
@@ -867,4 +942,12 @@ var _ = ginkgo.Describe("[sig-node] PodInPlaceResize", func() {
 			framework.ExpectNoError(err, "failed to delete pod")
 		})
 	}
+}
+
+var _ = ginkgo.Describe("[sig-node] [Arktos-CI] PodInPlaceResizeVM", func() {
+	doPodResizeTest(true)
+})
+
+var _ = ginkgo.Describe("[sig-node] [Arktos-CI] PodInPlaceResizeContainer", func() {
+	doPodResizeTest(false)
 })
