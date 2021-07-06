@@ -26,7 +26,6 @@ import (
 	"fmt"
 	"github.com/stretchr/testify/assert"
 	"k8s.io/apiserver/pkg/storage/storagecluster"
-	"path"
 	"reflect"
 	"strconv"
 	"strings"
@@ -535,7 +534,7 @@ func TestGuaranteedUpdateChecksStoredData(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	resp, err := store.getClientFromKey(key).Put(ctx, key, "test! "+string(data)+" ")
+	resp, err := store.getClientFromTenant("").Put(ctx, key, "test! "+string(data)+" ")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1554,7 +1553,7 @@ func mockGetClusterIdFromTenant(tenant string) uint8 {
 	return 0
 }
 
-func TestGetClientFromKey(t *testing.T) {
+/*func TestGetClientFromKey(t *testing.T) {
 	originHandler := storagecluster.GetClusterIdFromTenantHandler
 	storagecluster.GetClusterIdFromTenantHandler = mockGetClusterIdFromTenant
 	defer func() {
@@ -1622,7 +1621,7 @@ func TestGetClientFromKey(t *testing.T) {
 			assert.Equal(t, dataClientV3, c, fmt.Sprintf("Expected tenant key %s but not", dataKey))
 		}
 	}
-}
+}*/
 
 func createMockStore() *store {
 	return &store{

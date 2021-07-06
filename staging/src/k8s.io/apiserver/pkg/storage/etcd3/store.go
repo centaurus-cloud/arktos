@@ -29,7 +29,6 @@ import (
 	"k8s.io/apiserver/pkg/storage/storagecluster"
 	"path"
 	"reflect"
-	"regexp"
 	"strings"
 	"sync"
 	"time"
@@ -39,9 +38,11 @@ import (
 
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/api/meta"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/conversion"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/watch"
+	genericapirequest "k8s.io/apiserver/pkg/endpoints/request"
 	"k8s.io/apiserver/pkg/features"
 	"k8s.io/apiserver/pkg/storage"
 	"k8s.io/apiserver/pkg/storage/etcd3/metrics"
@@ -223,8 +224,9 @@ func (s *store) Versioner() storage.Versioner {
 // Get implements storage.Interface.Get.
 func (s *store) Get(ctx context.Context, key string, resourceVersion string, out runtime.Object, ignoreNotFound bool) error {
 	key = path.Join(s.pathPrefix, key)
+	tenant, _ := genericapirequest.TenantFrom(ctx)
 	startTime := time.Now()
-	getResp, err := s.getClientFromKey(key).KV.Get(ctx, key, s.getOps...)
+	getResp, err := s.getClientFromTenant(tenant).KV.Get(ctx, key, s.getOps...)
 	metrics.RecordEtcdRequestLatency("get", getTypeName(out), startTime)
 	if err != nil {
 		return err
@@ -271,8 +273,9 @@ func (s *store) Create(ctx context.Context, key string, obj, out runtime.Object,
 		return storage.NewInternalError(err.Error())
 	}
 
+	tenant, _ := genericapirequest.TenantFrom(ctx)
 	startTime := time.Now()
-	txnResp, err := s.getClientFromKey(key).KV.Txn(ctx).If(
+	txnResp, err := s.getClientFromTenant(tenant).KV.Txn(ctx).If(
 		notFound(key),
 	).Then(
 		clientv3.OpPut(key, string(newData), opts...),
@@ -303,8 +306,9 @@ func (s *store) Delete(ctx context.Context, key string, out runtime.Object, prec
 }
 
 func (s *store) conditionalDelete(ctx context.Context, key string, out runtime.Object, v reflect.Value, preconditions *storage.Preconditions, validateDeletion storage.ValidateObjectFunc) error {
+	tenant, _ := genericapirequest.TenantFrom(ctx)
 	startTime := time.Now()
-	getResp, err := s.getClientFromKey(key).KV.Get(ctx, key)
+	getResp, err := s.getClientFromTenant(tenant).KV.Get(ctx, key)
 	metrics.RecordEtcdRequestLatency("get", getTypeName(out), startTime)
 	if err != nil {
 		return err
@@ -323,7 +327,7 @@ func (s *store) conditionalDelete(ctx context.Context, key string, out runtime.O
 			return err
 		}
 		startTime := time.Now()
-		txnResp, err := s.getClientFromKey(key).KV.Txn(ctx).If(
+		txnResp, err := s.getClientFromTenant(tenant).KV.Txn(ctx).If(
 			clientv3.Compare(clientv3.ModRevision(key), "=", origState.rev),
 		).Then(
 			clientv3.OpDelete(key),
@@ -356,9 +360,10 @@ func (s *store) GuaranteedUpdate(
 	}
 	key = path.Join(s.pathPrefix, key)
 
+	tenant, _ := genericapirequest.TenantFrom(ctx)
 	getCurrentState := func() (*objState, error) {
 		startTime := time.Now()
-		getResp, err := s.getClientFromKey(key).KV.Get(ctx, key, s.getOps...)
+		getResp, err := s.getClientFromTenant(tenant).KV.Get(ctx, key, s.getOps...)
 		metrics.RecordEtcdRequestLatency("get", getTypeName(out), startTime)
 		if err != nil {
 			return nil, err
@@ -464,8 +469,9 @@ func (s *store) GuaranteedUpdate(
 		}
 		trace.Step("Transaction prepared")
 
+		tenant, _ := genericapirequest.TenantFrom(ctx)
 		startTime := time.Now()
-		txnResp, err := s.getClientFromKey(key).KV.Txn(ctx).If(
+		txnResp, err := s.getClientFromTenant(tenant).KV.Txn(ctx).If(
 			clientv3.Compare(clientv3.ModRevision(key), "=", origState.rev),
 		).Then(
 			clientv3.OpPut(key, string(newData), opts...),
@@ -509,8 +515,9 @@ func (s *store) GetToList(ctx context.Context, key string, resourceVersion strin
 	}
 
 	key = path.Join(s.pathPrefix, key)
+	tenant, _ := genericapirequest.TenantFrom(ctx)
 	startTime := time.Now()
-	getResp, err := s.getClientFromKey(key).KV.Get(ctx, key, s.getOps...)
+	getResp, err := s.getClientFromTenant(tenant).KV.Get(ctx, key, s.getOps...)
 	metrics.RecordEtcdRequestLatency("get", getTypeName(listPtr), startTime)
 	if err != nil {
 		return err
@@ -536,7 +543,7 @@ func (s *store) GetToList(ctx context.Context, key string, resourceVersion strin
 func (s *store) Count(key string) (int64, error) {
 	key = path.Join(s.pathPrefix, key)
 	startTime := time.Now()
-	getResp, err := s.getClientFromKey(key).KV.Get(context.Background(), key, clientv3.WithRange(clientv3.GetPrefixRangeEnd(key)), clientv3.WithCountOnly())
+	getResp, err := s.client.KV.Get(context.Background(), key, clientv3.WithRange(clientv3.GetPrefixRangeEnd(key)), clientv3.WithCountOnly())
 	metrics.RecordEtcdRequestLatency("listWithCount", key, startTime)
 	if err != nil {
 		return 0, err
@@ -655,6 +662,7 @@ func (s *store) List(ctx context.Context, key, resourceVersion string, pred stor
 		key += "/"
 	}
 	keyPrefix := key
+	tenant, _ := genericapirequest.TenantFrom(ctx)
 
 	// set the appropriate clientv3 options to filter the returned data set
 	var paging bool
@@ -684,7 +692,7 @@ func (s *store) List(ctx context.Context, key, resourceVersion string, pred stor
 		// get clients
 		clients = make(map[uint8]*clientv3.Client, len(continueTokens))
 		if len(continueTokens) == 1 && continueTokens[0].ResourceVersion == -1 {
-			clients = s.getClientsFromKey(key)
+			clients = s.getClientsFromKey(key, tenant)
 		} else {
 			for clusterId := range continueTokens {
 				if clusterId == 0 {
@@ -713,7 +721,7 @@ func (s *store) List(ctx context.Context, key, resourceVersion string, pred stor
 		rangeEnd := clientv3.GetPrefixRangeEnd(keyPrefix)
 		options = append(options, clientv3.WithRange(rangeEnd))
 
-		clients = s.getClientsFromKey(key)
+		clients = s.getClientsFromKey(key, tenant)
 	default:
 		if len(resourceVersion) > 0 {
 			fromRV, err := s.versioner.ParseResourceVersion(resourceVersion)
@@ -727,7 +735,7 @@ func (s *store) List(ctx context.Context, key, resourceVersion string, pred stor
 		}
 
 		options = append(options, clientv3.WithPrefix())
-		clients = s.getClientsFromKey(key)
+		clients = s.getClientsFromKey(key, tenant)
 	}
 
 	listResults := make(map[uint8]*listPartitionResult, len(clients))
@@ -1124,53 +1132,19 @@ var regexPrefixToCheck = []string{
 //		"apiextensions.k8s.io/customresourcedefinitions/"
 // 3. For the rest, the 2th segment will be reported as tenant
 // 4. If tenant name is not found from tenant map, goes to system cluster
-func (s *store) getClientFromKey(key string) *clientv3.Client {
-	_, client := s.getClientAndClusterIdFromKey(key)
+func (s *store) getClientFromTenant(tenant string) *clientv3.Client {
+	_, client := s.getClientAndClusterIdFromTenant(tenant)
 	return client
 }
 
-func (s *store) getClientAndClusterIdFromKey(key string) (uint8, *clientv3.Client) {
-	// remove prefix
-	lenPrefix := len(s.pathPrefix)
-	if lenPrefix > 0 && s.pathPrefix[lenPrefix-1:lenPrefix] != "/" {
-		lenPrefix++
-	}
-
-	if lenPrefix > len(key) {
-		return 0, s.client
-	}
-	concisedKey := key[lenPrefix:]
-
-	segs := strings.Split(concisedKey, "/")
-	message := fmt.Sprintf("key [%s] segments %v len %d", key, segs, len(segs))
-
-	if len(segs) <= 2 {
-		klog.V(5).Infof("system client: key segments len <= 2. %s ", message)
-		return 0, s.client
-	}
-
-	tenant := ""
-	hasPrefix := false
-	for _, prefix := range regexPrefixToCheck {
-		isMatched, err := regexp.MatchString(prefix, key)
-		if err == nil && isMatched {
-			hasPrefix = true
-			tenant = getTenantForKey(segs, 2)
-		}
-		if err != nil {
-			klog.Errorf("Regex match error %v. key %s", err, key)
-		}
-	}
-	if !hasPrefix {
-		tenant = getTenantForKey(segs, 1)
-	}
-	if tenant == "" {
-		klog.V(5).Infof("system client: %s ", message)
+func (s *store) getClientAndClusterIdFromTenant(tenant string) (uint8, *clientv3.Client) {
+	if tenant == "" || tenant == metav1.TenantSystem || tenant == metav1.TenantAllExplicit {
+		klog.V(5).Infof("system client: tenant (%s) ", tenant)
 		return 0, s.client
 	}
 
 	clusterId, c := s.getClientForTenant(tenant)
-	klog.V(5).Infof("client %v: %s. cluster id %v", c.Endpoints(), message, clusterId)
+	klog.V(5).Infof("client %v: tenant (%s). cluster id %v", c.Endpoints(), tenant, clusterId)
 	return clusterId, c
 }
 
@@ -1197,10 +1171,10 @@ func getTenantForKey(segs []string, posToGet int) string {
 
 // getClientsFromKey is used by list to get all related storage clusters
 // For example: get pods from all tenants
-func (s *store) getClientsFromKey(key string) map[uint8]*clientv3.Client {
+func (s *store) getClientsFromKey(key, tenant string) map[uint8]*clientv3.Client {
 	clientMap := make(map[uint8]*clientv3.Client)
 
-	clusterId, client := s.getClientAndClusterIdFromKey(key)
+	clusterId, client := s.getClientAndClusterIdFromTenant(tenant)
 	clientMap[clusterId] = client
 	if clusterId != 0 {
 		// This key belongs to a data cluster, no need to check other clusters
