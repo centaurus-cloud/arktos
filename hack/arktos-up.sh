@@ -527,6 +527,12 @@ fi
 ${KUBECTL} --kubeconfig="${CERT_DIR}/admin.kubeconfig" apply -f "${KUBE_ROOT}/pkg/controller/artifacts/crd-network.yaml"
 # refresh the resource discovery cache after the CRD is created
 ${KUBECTL} --kubeconfig="${CERT_DIR}/admin.kubeconfig" api-resources &>/dev/null
+# Applying mizar cni
+if [[ "${CNIPLUGIN}" = "mizar" ]]; then
+  ${KUBECTL} --kubeconfig="${CERT_DIR}/admin.kubeconfig" apply -f https://raw.githubusercontent.com/CentaurusInfra/mizar/dev-next/etc/deploy/deploy.mizar.yaml
+  sudo systemctl restart containerd.service
+fi
+
 echo "*******************************************"
 echo "Setup Arktos components ..."
 echo ""

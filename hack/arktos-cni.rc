@@ -66,6 +66,21 @@ install_cni_bridge() {
     echo "done with bridge cni plugin installation"
 }
 
+install_cni_mizar() {
+    echo "Ensuring firewall to allow traffic forward by default"
+    sudo iptables -S FORWARD | grep '\-P' | grep DROP && sudo iptables -P FORWARD ACCEPT
+    sudo iptables -S FORWARD | grep '\-P'
+    ensure_cni_binaries
+    [ -d "/var/mizar" ] && sudo rm -rf /var/mizar
+    git -C /var/ clone https://github.com/CentaurusInfra/mizar.git
+    sudo ln -snf /sys/fs/bpf /bpffs
+    sudo ln -snf /var/mizar/build/bin /trn_bin
+    sudo ln -snf /var/mizar/build/xdp /trn_xdp
+    sudo ln -snf /var/mizar/etc/cni/10-mizarcni.conf /etc/cni/net.d/10-mizarcni.conf
+    sudo ln -snf /var/mizar/mizar/cni.py /opt/cni/bin/mizarcni
+    sudo ln -snf /var/mizar/build/tests/mizarcni.config /etc/mizarcni.config
+    echo "done with mizar cni plugin installation"
+}
 
 build_alktron() {
     local ALKTRON_DIR=$1
@@ -134,32 +149,50 @@ ensure_devstack() {
 
 
 install_arktos_containerd() {
-    local CONTAINERD_DIR=$(dirname "$BASH_SOURCE[0]}")/../../arktos-containerd
-    [ -d ${CONTAINERD_DIR} ] || die "arktos-containerd repo not found. please clone futurewei-cloud/arktos-containerd branch wip-pod-annotation-to-cni-args side by side with arktos"
-    if [ ! -x ${CONTAINERD_DIR}/bin/containerd ]; then
-        echo "building arktos containerd..."
-        pushd ${CONTAINERD_DIR} > /dev/null
-        docker run --rm -e GOPATH=/go -v ${PWD}:/go/src/github.com/containerd/containerd -w /go/src/github.com/containerd/containerd golang:1.12 sh -c "apt update; apt install -y libbtrfs-dev libseccomp-dev; make bin/containerd"
-        popd > /dev/null
-        echo "...built"
-    fi
+#    local CONTAINERD_DIR=$(dirname "$BASH_SOURCE[0]}")/../../arktos-containerd
+#    [ -d ${CONTAINERD_DIR} ] || die "arktos-containerd repo not found. please clone futurewei-cloud/arktos-containerd branch wip-pod-annotation-to-cni-args side by side with arktos"
+#    if [ ! -x ${CONTAINERD_DIR}/bin/containerd ]; then
+#        echo "building arktos containerd..."
+#        pushd ${CONTAINERD_DIR} > /dev/null
+#        docker run --rm -e GOPATH=/go -v ${PWD}:/go/src/github.com/containerd/containerd -w /go/src/github.com/containerd/containerd golang:1.12 sh -c "apt update; apt install -y libbtrfs-dev libseccomp-dev; make bin/containerd"
+#        popd > /dev/null
+#        echo "...built"
+#    fi
+#
+#    echo "make sure arktos containerd in power"
+#    if [ ! "$(${CONTAINERD_DIR}/bin/containerd --version)" == "$(containerd --version)" ]; then
+#        echo "stopping containerd shortly to replace the binary..."
+#        local containerd_path=$(which containerd)
+#        sudo systemctl stop containerd
+#        local containerd_back_path=$(dirname ${containerd_path})/containerd_arktos_backup
+#        sudo mv ${containerd_path} ${containerd_back_path}
+#        sudo cp ${CONTAINERD_DIR}/bin/containerd ${containerd_path}
+#        sudo systemctl start containerd
+#        echo "warning: original containerd binary is saved to ${containerd_path})/containerd_arktos_backup"
+#        echo "...done"
+#    fi
 
-    echo "make sure arktos containerd in power"
-    if [ ! "$(${CONTAINERD_DIR}/bin/containerd --version)" == "$(containerd --version)" ]; then
-        echo "stopping containerd shortly to replace the binary..."
-        local containerd_path=$(which containerd)
-        sudo systemctl stop containerd
-        local containerd_back_path=$(dirname ${containerd_path})/containerd_arktos_backup
-        sudo mv ${containerd_path} ${containerd_back_path}
-        sudo cp ${CONTAINERD_DIR}/bin/containerd ${containerd_path}
-        sudo systemctl start containerd
-        echo "warning: original containerd binary is saved to ${containerd_path})/containerd_arktos_backup"
-        echo "...done"
+    [ ! -d "$HOME/arktos-containerd" ] && mkdir $HOME/arktos-containerd
+    local CONTAINERD_DIR=$HOME/arktos-containerd
+    [ ! -f "$CONTAINERD_DIR/containerd" ] && wget -qO- https://github.com/CentaurusInfra/containerd/releases/download/tenant-cni-args/containerd.zip | zcat > $CONTAINERD_DIR/containerd && sudo chmod +x $CONTAINERD_DIR/containerd
+    echo "Checking arktos containerd..."
+    if [ ! "$(${CONTAINERD_DIR}/containerd --version)" == "$(containerd --version)" ] ; then
+      echo "arktos containerd not found..."
+      [ ! -f "$HOME/arktos-containerd/containerd-1.4.2-linux-amd64.tar.gz" ] && wget https://github.com/containerd/containerd/releases/download/v1.4.2/containerd-1.4.2-linux-amd64.tar.gz -P $HOME/arktos-containerd/
+      tar -zxf $HOME/arktos-containerd/containerd-1.4.2-linux-amd64.tar.gz --directory /usr/
+      echo "installing arktos containerd..."
+      sudo systemctl stop containerd
+      sudo mv /usr/bin/containerd /usr/bin/containerd.bak
+      sudo cp $HOME/arktos-containerd/containerd /usr/bin/
+      sudo systemctl restart containerd
+      sudo systemctl restart docker
+    else
+      echo "arktos containerd found..."
     fi
 }
 
 
-CNIPLUGIN=${CNIPLUGIN:-"bridge"}
+CNIPLUGIN=${CNIPLUGIN:-"mizar"}
 cni_conf_dir=${CNI_CONF_DIR:-"/etc/cni/net.d"}
 cni_bin_dir=${CNI_BIN_DIR:-"/opt/cni/bin"}
 
@@ -170,6 +203,10 @@ if [[ -n "${ARKTOS_NO_CNI_PREINSTALLED}" ]]; then
 elif [ "${CNIPLUGIN}" == "bridge" ]; then
     echo "cni plugin is bridge; arktos will use bridge to provision pod network"
     install_cni_bridge
+elif [ "${CNIPLUGIN}" == "mizar" ]; then
+    echo "cni plugin is mizar; arktos will use mizar to provision pod network"
+    install_arktos_containerd
+    install_cni_mizar
 elif [ "${CNIPLUGIN}" == "alktron" ]; then
     ensure_devstack
     install_arktos_containerd
