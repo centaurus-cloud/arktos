@@ -10,6 +10,7 @@ go_library(
     srcs = [
         "apparmor.go",
         "autoscaling_utils.go",
+        "basic_perf_tests.go",
         "configmap.go",
         "configmap_volume.go",
         "container.go",
