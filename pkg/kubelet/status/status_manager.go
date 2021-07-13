@@ -527,14 +527,15 @@ func (m *manager) syncPod(uid types.UID, status versionedPodStatus) {
 	}
 
 	oldStatus := pod.Status.DeepCopy()
+	klog.V(2).Infof("Start Patch status for pod %q", format.PodWithDeletionTimestampAndResourceVersion(pod))
 	newPod, patchBytes, unchanged, err := statusutil.PatchPodStatus(tenantPartitionClient, pod.Tenant, pod.Namespace, pod.Name, pod.UID, *oldStatus, mergePodStatus(*oldStatus, status.status))
-	klog.V(3).Infof("Patch status for pod %q with %q", format.PodWithDeletionTimestampAndResourceVersion(pod), patchBytes)
+	klog.V(2).Infof("Patch status for pod %q with %q", format.PodWithDeletionTimestampAndResourceVersion(pod), patchBytes)
 	if err != nil {
 		klog.Warningf("Failed to update status for pod %q: %v", format.PodWithDeletionTimestampAndResourceVersion(pod), err)
 		return
 	}
 	if unchanged {
-		klog.V(3).Infof("Status for pod %q is up-to-date: (%d)", format.PodWithDeletionTimestampAndResourceVersion(pod), status.version)
+		klog.V(2).Infof("Status for pod %q is up-to-date: (%d)", format.PodWithDeletionTimestampAndResourceVersion(pod), status.version)
 	} else {
 		klog.V(3).Infof("Status for pod %q updated successfully: (%d, %+v)", format.PodWithDeletionTimestampAndResourceVersion(pod), status.version, status.status)
 		pod = newPod
