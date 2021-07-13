@@ -14,4 +14,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-export KUBE_GIT_VERSION=v0.7.0
+export KUBE_GIT_VERSION=v0.8.0
