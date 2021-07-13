@@ -499,6 +499,7 @@ func (m *manager) syncBatch() {
 
 // syncPod syncs the given status with the API server. The caller must not hold the lock.
 func (m *manager) syncPod(uid types.UID, status versionedPodStatus) {
+	klog.V(2).Infof("Start Status Manager: syncPod in syncbatch. pod UID: %q", uid)
 	if !m.needsUpdate(uid, status) {
 		klog.V(1).Infof("Status for pod %q is up-to-date; skipping", uid)
 		return
@@ -527,14 +528,15 @@ func (m *manager) syncPod(uid types.UID, status versionedPodStatus) {
 	}
 
 	oldStatus := pod.Status.DeepCopy()
+	klog.V(2).Infof("Start Patch status for pod %q", format.PodWithDeletionTimestampAndResourceVersion(pod))
 	newPod, patchBytes, unchanged, err := statusutil.PatchPodStatus(tenantPartitionClient, pod.Tenant, pod.Namespace, pod.Name, pod.UID, *oldStatus, mergePodStatus(*oldStatus, status.status))
-	klog.V(3).Infof("Patch status for pod %q with %q", format.PodWithDeletionTimestampAndResourceVersion(pod), patchBytes)
+	klog.V(2).Infof("Patch status for pod %q with %q", format.PodWithDeletionTimestampAndResourceVersion(pod), patchBytes)
 	if err != nil {
 		klog.Warningf("Failed to update status for pod %q: %v", format.PodWithDeletionTimestampAndResourceVersion(pod), err)
 		return
 	}
 	if unchanged {
-		klog.V(3).Infof("Status for pod %q is up-to-date: (%d)", format.PodWithDeletionTimestampAndResourceVersion(pod), status.version)
+		klog.V(2).Infof("Status for pod %q is up-to-date: (%d)", format.PodWithDeletionTimestampAndResourceVersion(pod), status.version)
 	} else {
 		klog.V(3).Infof("Status for pod %q updated successfully: (%d, %+v)", format.PodWithDeletionTimestampAndResourceVersion(pod), status.version, status.status)
 		pod = newPod
@@ -555,6 +557,8 @@ func (m *manager) syncPod(uid types.UID, status versionedPodStatus) {
 		klog.V(3).Infof("Pod %q fully terminated and removed from etcd", format.Pod(pod))
 		m.deletePodStatus(uid)
 	}
+
+	klog.V(2).Infof("End Status Manager: syncPod in syncbatch. pod UID: %q", uid)
 }
 
 // needsUpdate returns whether the status is stale for the given pod UID.

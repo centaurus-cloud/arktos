@@ -730,6 +730,12 @@ func (s *store) List(ctx context.Context, key, resourceVersion string, pred stor
 		clients = s.getClientsFromKey(key)
 	}
 
+	// assert if the client is not 1
+	klog.V(2).Infof("length of clients: %v", len(clients))
+	if len(clients) != 1 {
+		panic("client is not 1")
+	}
+
 	listResults := make(map[uint8]*listPartitionResult, len(clients))
 	var wg sync.WaitGroup
 	wg.Add(len(clients))
@@ -765,9 +771,9 @@ func (s *store) List(ctx context.Context, key, resourceVersion string, pred stor
 			if err != nil {
 				result = &listPartitionResult{err: err}
 			}
-			listMux.Lock()
+		//	listMux.Lock()
 			listResults[i] = result
-			listMux.Unlock()
+		//	listMux.Unlock()
 			wg.Done()
 		}(c, keyToUse, returnedRV, continueKey, optionsToUse, listResults, i, &listAppendMux)
 	}
@@ -852,9 +858,12 @@ func (s *store) listPartition(ctx context.Context, client *clientv3.Client, key 
 	var hasMore bool
 	var getResp *clientv3.GetResponse
 	var err error
+	counter := 0
 	for {
+		counter++
 		startTime := time.Now()
 		getResp, err = client.KV.Get(ctx, key, options...)
+		trace.Step( fmt.Sprintf("GotResponse. counter: %v", counter))
 		metrics.RecordEtcdRequestLatency("list", getTypeName(listPtr), startTime)
 		if err != nil {
 			return nil, interpretListError(err, len(pred.Continue) > 0, continueKey, keyPrefix)
@@ -867,14 +876,14 @@ func (s *store) listPartition(ctx context.Context, client *clientv3.Client, key 
 
 		// avoid small allocations for the result slice, since this can be called in many
 		// different contexts and we don't know how significantly the result will be filtered
-		trace.Step("Acquiring ListAppendMux listPartition")
-		listAppendMux.Lock()
-		trace.Step("Acquired ListAppendMux listPartition")
+		// trace.Step("Acquiring ListAppendMux listPartition")
+		// listAppendMux.Lock()
+		// trace.Step("Acquired ListAppendMux listPartition")
 
 		if pred.Empty() {
 			growSlice(v, len(getResp.Kvs))
 		} else {
-			growSlice(v, 2048, len(getResp.Kvs))
+			growSlice(v, 4096, len(getResp.Kvs))
 		}
 
 		// take items from the response until the bucket is full, filtering as we go
@@ -887,17 +896,17 @@ func (s *store) listPartition(ctx context.Context, client *clientv3.Client, key 
 
 			data, _, err := s.transformer.TransformFromStorage(kv.Value, authenticatedDataString(kv.Key))
 			if err != nil {
-				listAppendMux.Unlock()
+				// listAppendMux.Unlock()
 				return nil, storage.NewInternalErrorf("unable to transform key %q: %v", kv.Key, err)
 			}
 
 			if err := appendListItem(v, data, uint64(kv.ModRevision), pred, s.codec, s.versioner); err != nil {
-				listAppendMux.Unlock()
+				// listAppendMux.Unlock()
 				return nil, err
 			}
 		}
-		listAppendMux.Unlock()
-		trace.Step("Took items from the response")
+		// listAppendMux.Unlock()
+		trace.Step(fmt.Sprintf("Took items from the response. counter: %v", counter))
 
 		// indicate to the client which resource version was returned
 		if returnedRV == 0 {
